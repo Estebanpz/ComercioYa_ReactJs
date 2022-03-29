@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 //Iconos
 import {BsDoorOpen, BsPersonPlus,BsHouse} from "react-icons/bs";
-const Navegacion = () => {
+const Header = () => {
   return (
     <ContenedorHeader>
       <Titulo>Comercio Ya</Titulo>
@@ -30,7 +30,7 @@ const ContenedorHeader = styled.header`
   height: auto;
   max-width: 1200px;
   align-items: center;
-  margin: 10px 0px 20px 0;
+  margin: 9px 0px 20px 0;
 `;
 
 const Titulo = styled.h1`
@@ -46,31 +46,43 @@ const Menu = styled.nav`
   align-items: center;
   margin: 10px 10px 0 0;
 
-  @media (max-width: 300px) {
-    flex-direction: column;
-  }
-
+  
   a {
     text-decoration: none;
     text-transform: uppercase;
     color: #165168;
     margin: 0px 10px;
-      svg{
+    svg{
       font-size: 30px;
       margin-left: 10px;
-      
-      }
+    }
   }
-
+  
   a:hover {
     color: #191668;
   }
-
+  
   a.active {
     border-bottom: 2px solid #165168;
-    padding-bottom: 3px;
+    padding-bottom: 1px;
+    
   }
-
   
-`;
-export default Navegacion;
+  @media (max-width: 300px) {
+    flex-direction: column;
+    align-items: center;
+
+    a{
+      line-height: 25px;
+    }
+    a > svg{
+      font-size:20px;
+      margin-left: 5px;
+    }
+    a.active{
+      border-bottom: 2px solid #165168;
+    }
+  }
+  
+  `;
+export default Header;
