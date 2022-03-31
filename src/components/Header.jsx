@@ -2,25 +2,52 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 //Iconos
-import {BsDoorOpen, BsPersonPlus,BsHouse} from "react-icons/bs";
+import {
+  BsDoorOpen,
+  BsPersonPlus,
+  BsHouse,
+  BsShop,
+} from "react-icons/bs";
+//Importando el boton de cerrar sesion
+import BotonCerrarSesion from "../elementos/BotonCerrarSesion";
+// Importando la conexion a el contexto de User
+import { useAuth } from "../Context/AuthContext";
 const Header = () => {
+  const { user } = useAuth();
+
   return (
     <ContenedorHeader>
       <Titulo>Comercio Ya</Titulo>
       <Menu>
         <NavLink to="/">
           Inicio
-          <BsHouse/>
+          <BsHouse />
         </NavLink>
-        <NavLink to="/productos"></NavLink>
-        <NavLink to="/inicio-sesion">
-          Inciar Sesión
-          <BsDoorOpen/>
+
+        <NavLink to={!user ? '/inicio-sesion' : `${'/negocio/'+user.uid}`}>
+          {!user ? (
+            <>
+              Inciar Sesión
+              <BsDoorOpen />
+            </>
+          ) : (
+            <>
+              {user.displayName}
+              <BsShop />
+            </>
+          )}
         </NavLink>
-        <NavLink to="/crear-cuenta">
-          Crear Cuenta
-          <BsPersonPlus/>
-        </NavLink>
+        {
+          !user ? 
+           <>
+            <NavLink to="/crear-cuenta">
+              Crear Cuenta
+              <BsPersonPlus />
+            </NavLink>
+           </>
+
+           : <BotonCerrarSesion />
+        }
       </Menu>
     </ContenedorHeader>
   );
@@ -46,43 +73,40 @@ const Menu = styled.nav`
   align-items: center;
   margin: 10px 10px 0 0;
 
-  
   a {
     text-decoration: none;
     text-transform: uppercase;
     color: #165168;
     margin: 0px 10px;
-    svg{
+    svg {
       font-size: 30px;
       margin-left: 10px;
     }
   }
-  
+
   a:hover {
     color: #191668;
   }
-  
+
   a.active {
     border-bottom: 2px solid #165168;
     padding-bottom: 1px;
-    
   }
-  
+
   @media (max-width: 300px) {
     flex-direction: column;
     align-items: center;
 
-    a{
+    a {
       line-height: 25px;
     }
-    a > svg{
-      font-size:20px;
+    a > svg {
+      font-size: 20px;
       margin-left: 5px;
     }
-    a.active{
+    a.active {
       border-bottom: 2px solid #165168;
     }
   }
-  
-  `;
+`;
 export default Header;

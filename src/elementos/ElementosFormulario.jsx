@@ -13,6 +13,23 @@ const Formulario = styled.form`
     @media (max-width: 490px) {
         flex-direction: column;
     }
+
+    >a {
+        color: #000;
+        text-decoration: none;
+        font-size: 1.4rem;
+        margin-top: 1.40rem;
+        
+        &:hover {
+            transition: all ease-in-out 0.6s;
+            border-bottom: 2px solid #165168;
+        }
+        >svg{
+            margin-left: .5rem;
+            font-size:0.10rem;
+            color: #000;
+        }
+    }
 `;
 //Input Básico
 const Input = styled.input`

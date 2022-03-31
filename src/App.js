@@ -7,21 +7,35 @@ import Home from './components/Home';
 import Header from './components/Header';
 import InicioSesion from './components/InicioSesion';
 import CrearCuenta from './components/CrearCuenta';
+import RestablecerContrasena from './components/RestabalecerContrasena';
+import Negocio from './components/Negocio';
+//Importando el AuthProvider
+import {AuthProvider} from "./Context/AuthContext";
+//Importando Ruta Privada
+import RutaPrivada from './components/RutaPrivada';
 function App() {
   return (
-    <BrowserRouter>
-      <ContenedorPrincipal>
-        <Header />
-        <Main>
-        <Routes>
-          <Route path='/' element={<Home/>}/>
-          <Route path='/inicio-sesion' element={<InicioSesion/>}/>
-          <Route path='/crear-cuenta' element={<CrearCuenta/>}/>
-          <Route path="*" element={<Error404/>}/>
-        </Routes>
-        </Main>
-      </ContenedorPrincipal>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <ContenedorPrincipal>
+          <Header />
+          <Main>
+          <Routes>
+            <Route path='/' element={<Home/>}/>
+            <Route path='/inicio-sesion' element={<InicioSesion/>}/>
+            <Route path='/crear-cuenta' element={<CrearCuenta/>}/>
+            <Route path='/restablecer-contrasena' element={<RestablecerContrasena/>}/>
+            <Route path='/negocio/:id' element={
+              <RutaPrivada>
+                <Negocio/>
+              </RutaPrivada>
+            }/>
+            <Route path="*" element={<Error404/>}/>
+          </Routes>
+          </Main>
+        </ContenedorPrincipal>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

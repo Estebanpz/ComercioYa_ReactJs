@@ -7,10 +7,14 @@ import { ReactComponent as IconoRegistro } from "./../img/register.svg";
 //Importando funciones para validar el formulario
 import useFormValidacion from "../Hooks/useFormValidacion";
 //Importando la funcion para registar el usuario en Firebase
-import { RegistrarUsuario } from "../Firebase/RegistrarUsuario";
+import RegistrarUsuario from "../Firebase/RegistrarUsuario";
+//Importando el toast y Toaster para las notificaciones
+import toast, { Toaster } from "react-hot-toast";
 const CrearCuenta = () => {
   //Llamando a la funcion que valida el formulario
-  const {error, validacion, valido} = useFormValidacion();
+  const { error, validacion, valido } = useFormValidacion();
+  //Manejando errores de Registro de Usuario
+  const [errorRegistro, setErrorRegistro] = useState("");
   //Definiendo el estado de los inputs
   const [datos, setDatos] = useState({
     nombre: "",
@@ -21,44 +25,79 @@ const CrearCuenta = () => {
   });
 
   const handleChange = (e) => {
-      let name = e.target.name;
-      let value = e.target.value;
+    let name = e.target.name;
+    let value = e.target.value;
 
-
-      validacion(e,name, value);
-
-      setDatos({
-        ...datos,
-        [name]: value,
-      });
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if(valido){
-      alert("Formulario valido");
-      RegistrarUsuario(datos.correo, datos.contrasena,datos.nombre,datos.apellido);
-    }else{
-      alert("Formulario invalido");
-    }
+    validacion(e, name, value);
 
     setDatos({
-      nombre: "",
-      apellido: "",
-      correo: "",
-      contrasena: "",
-      contrasena2: "",
+      ...datos,
+      [name]: value,
     });
-  }
+  }; //Fin del handleChange
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (valido) {
+      try {
+        await RegistrarUsuario(
+          datos.correo,
+          datos.contrasena,
+          datos.nombre,
+          datos.apellido
+        );
+        toast.success("Usuario Registrado con Exito", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+            fontSize: "1.5rem",
+          },
+        });
+
+        setDatos({
+          nombre: "",
+          apellido: "",
+          correo: "",
+          contrasena: "",
+          contrasena2: "",
+        });
+      } catch (error) {
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setErrorRegistro("El correo ya esta en uso");
+            toast.error(errorRegistro);
+            break;
+
+          case "auth/invalid-email":
+            setErrorRegistro("El correo no es valido");
+            toast.error(errorRegistro);
+            break;
+
+          case "auth/weak-password":
+            setErrorRegistro("La contraseña es muy debil");
+            toast.error(errorRegistro);
+            break;
+          default:
+            break;
+        }
+      }
+    } else {
+      toast.error("Por favor llena todos los campos");
+    }
+  }; // Fin del onSubmit
+
+  //Renderizado del componente
   return (
     <>
       <Titulo>
         Registrate como Comerciante
         <IconoRegistro />
       </Titulo>
-      <Formulario onSubmit={(e)=> onSubmit(e)}>
-        {error && error.nombre &&<Error>{error.nombre}</Error>}
+      <Formulario onSubmit={(e) => onSubmit(e)}>
+        {error && error.nombre && <Error>{error.nombre}</Error>}
+        {errorRegistro && error.nombre && toast.error(errorRegistro)}
         <Input
           type="text"
           name="nombre"
@@ -66,9 +105,9 @@ const CrearCuenta = () => {
           value={datos.nombre}
           onChange={(e) => handleChange(e)}
         />
-        <Input 
-          type="text" 
-          name="apellido" 
+        <Input
+          type="text"
+          name="apellido"
           placeholder="APELLIDO"
           value={datos.apellido}
           onChange={(e) => handleChange(e)}
@@ -81,16 +120,17 @@ const CrearCuenta = () => {
           value={datos.correo}
           onChange={(e) => handleChange(e)}
         />
-        {error && error.correo &&<Error>{error.correo}</Error>}
-        <Input type="password"
-               name="contrasena" 
-               placeholder="CONTRASEÑA" 
-               id="contrasena"
-               autoComplete="true"
-               value={datos.contrasena}
-               onChange={(e) => handleChange(e)}
+        {error && error.correo && <Error>{error.correo}</Error>}
+        <Input
+          type="password"
+          name="contrasena"
+          placeholder="CONTRASEÑA"
+          id="contrasena"
+          autoComplete="true"
+          value={datos.contrasena}
+          onChange={(e) => handleChange(e)}
         />
-        {error && error.contrasena &&<Error>{error.contrasena}</Error>}
+        {error && error.contrasena && <Error>{error.contrasena}</Error>}
         <Input
           type="password"
           name="contrasena2"
@@ -99,9 +139,15 @@ const CrearCuenta = () => {
           value={datos.contrasena2}
           onChange={(e) => handleChange(e)}
         />
-        {error && error.contrasena2 &&<Error>{error.contrasena2}</Error>}
+        {error && error.contrasena2 && <Error>{error.contrasena2}</Error>}
         <Boton>CREAR CUENTA</Boton>
       </Formulario>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          progress: true,
+        }}
+      />
     </>
   );
 };
