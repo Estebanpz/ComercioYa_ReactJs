@@ -40,14 +40,24 @@ const InicioSesion = () => {
         try {
             await IniciarSesion(datos.email, datos.password);
             toast.success("Bienvenido", darkMode);
-            navigate('/');
+            setTimeout(() => {
+              navigate('/');
+            }, 700);
         } catch (error) {
             if(error.code === 'auth/wrong-password'){
                 toast.error('La contraseña es incorrecta',darkMode);
+                setDatos({
+                  ...datos,
+                  password: ""
+                });
             }
 
             if(error.code === 'auth/user-not-found'){
                 toast.error('El usuario no existe', darkMode);
+                setDatos({
+                  ...datos,
+                  email: ""
+                });
             }
             console.log(error);
             setDatos({
@@ -57,10 +67,6 @@ const InicioSesion = () => {
         }
     }else{
         toast.error('Debes llenar todos los campos',darkMode);
-        setDatos({
-            email: "",
-            password: "",
-        });
     }
   }
   return (

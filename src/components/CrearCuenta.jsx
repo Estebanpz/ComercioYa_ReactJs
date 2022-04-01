@@ -97,7 +97,6 @@ const CrearCuenta = () => {
       </Titulo>
       <Formulario onSubmit={(e) => onSubmit(e)}>
         {error && error.nombre && <Error>{error.nombre}</Error>}
-        {errorRegistro && error.nombre && toast.error(errorRegistro)}
         <Input
           type="text"
           name="nombre"

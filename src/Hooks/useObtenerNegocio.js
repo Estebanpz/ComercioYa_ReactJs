@@ -1,28 +1,27 @@
-import { useState, useEffect } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../Firebase/firebaseConfig";
-import {useNavigate} from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { useState, useEffect } from "react";
 
-const useObtenerNegocio = (id) =>{
-    const [negocio, setNegocio] = useState('');
-    const navigate = useNavigate();
-    let docRef = doc(db, "comerciantes", id);
-    const obtenerNegocio = onSnapshot(docRef, (doc) => {
-        if(doc.exists){
-            setNegocio(doc.data());
-        }else{
-            navigate('/');
-        }
-    });
 
-    useEffect(() => {
-        obtenerNegocio();
+const useObtenerNegocio = (id) => {
+  const [negocio, cambiarNegocio] = useState([]);
+  
+  const obtenerNegocio = async () => {
+    const docRef = doc(db, "Comerciantes", id);
+    let docSnap = await getDoc(docRef);
 
-        return () => setNegocio('');
-    }, [id]);
+    if (docSnap.exists()) {
+        cambiarNegocio(docSnap.data());
+    }
+  };
+  useEffect(() => {
+    obtenerNegocio();
 
-    return [negocio, obtenerNegocio, setNegocio];
-}
+    return () => {
+      cambiarNegocio('');
+    };
+  }, [id]);
 
- 
+  return [negocio, cambiarNegocio];
+};
 export default useObtenerNegocio;
