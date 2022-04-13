@@ -6,9 +6,7 @@ const Formulario = styled.form`
     margin-bottom: 2rem;
     text-align: center;
     align-items: center;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+    
     //Medias Query
     @media (max-width: 490px) {
         flex-direction: column;
@@ -19,7 +17,7 @@ const Formulario = styled.form`
         text-decoration: none;
         font-size: 1.4rem;
         margin-top: 1.40rem;
-        
+        display:block;
         &:hover {
             transition: all ease-in-out 0.6s;
             border-bottom: 2px solid #165168;
@@ -33,7 +31,7 @@ const Formulario = styled.form`
 `;
 //Input Básico
 const Input = styled.input`
-    width: 65%;
+    width: 90%;
     padding: 0.3rem;
     margin-bottom: 2rem;
     margin-top: 0.5rem;

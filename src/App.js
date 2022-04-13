@@ -10,47 +10,49 @@ import CrearCuenta from './components/CrearCuenta';
 import RestablecerContrasena from './components/RestabalecerContrasena';
 import Negocio from './components/Negocio';
 //Importando el AuthProvider
-import {AuthProvider} from "./Context/AuthContext";
+import { AuthProvider } from "./Context/AuthContext";
 //Importando Ruta Privada
 import RutaPrivada from './components/RutaPrivada';
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <ContenedorPrincipal>
+        
           <Header />
           <Main>
-          <Routes>
-            <Route path='/' element={<Home/>}/>
-            <Route path='/inicio-sesion' element={<InicioSesion/>}/>
-            <Route path='/crear-cuenta' element={<CrearCuenta/>}/>
-            <Route path='/restablecer-contrasena' element={<RestablecerContrasena/>}/>
-            <Route path='/negocio/:id' element={
-              <RutaPrivada>
-                <Negocio/>
-              </RutaPrivada>
-            }/>
-            <Route path="*" element={<Error404/>}/>
-          </Routes>
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/inicio-sesion' element={<InicioSesion />} />
+              <Route path='/crear-cuenta' element={<CrearCuenta />} />
+              <Route path='/restablecer-contrasena' element={<RestablecerContrasena />} />
+              <Route path='/negocio/:id' element={
+                <RutaPrivada>
+                  <Negocio />
+                </RutaPrivada>
+              } />
+              <Route path="*" element={<Error404 />} />
+            </Routes>
           </Main>
-        </ContenedorPrincipal>
+       
       </BrowserRouter>
     </AuthProvider>
   );
 }
 
-const ContenedorPrincipal = styled.div`
-  padding: 20px;
-  width: 100%;
-  max-width: calc(100% - 40px);
-  height:auto;
-`;
 
-const Main = styled.main`
+const Main = styled.div`
+  width: 98%;
+  height:100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin:10px 10px 10px 10px;
+  outline: 1px solid orangered;
   background: #ffff;
-  border-radius: 10px;
-  padding: 15px;
+  border-radius: 5px;
   box-shadow: 0 0 5px rgba(129, 129, 129, 0.8);
   text-align: center;
+  height: auto;
 `;
 export default App;

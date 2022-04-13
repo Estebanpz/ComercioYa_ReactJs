@@ -2,6 +2,8 @@ import React from "react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useObtenerNegocios from "../Hooks/useObtenerNegocios";
+import Comerciantes from "./Comerciantes";
+
 const Home = () => {
   const [cargando, setCargando] = useState(true);
   const [negocios, setNegocios] = useObtenerNegocios();
@@ -15,27 +17,44 @@ const Home = () => {
     };
   }, []);
   return (
-    <>
-      <h1>Comerciantes</h1>
+    <ContenedorCards>
         {
-            !cargando && negocios.length >0 ? negocios.map((negocio)=>{
-                return(
-                    <div key={negocio.id}>
-                        <TituloNegocio>{negocio.Nombre}</TituloNegocio>
-                    </div>
-                )
-            })
+            !cargando && negocios.length >0 ?
+            <Comerciantes comerciantes={negocios} />
             :
             <div>Cargando...</div>
         }
-    </>
+    </ContenedorCards>
   );
 };
+// Cards responsives
+const ContenedorCards = styled.div`
+    width: 100%;
+    height: 100%;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    // con fr son fracciones, entonces subdivide la pantalla en 3 partes o x fracciones
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    //Espacio entre todo - filas y columnas
+    //gap: 1rem;
+    
+    //Espacio entre columnas
+    //column-gap: 0.4rem;
+    //row-gap: 0.3rem;
+    outline: 4px solid magenta;
 
-const TituloNegocio = styled.h3`
-  color: #000;
-  font-size: 1rem;
-  text-align: center;
-  margin-top: 1rem;
+    @media (max-width: 1060px){
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 760px){
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    @media (max-width: 522px) {
+      grid-template-rows: repeat(2, 1fr);
+    }
 `;
 export default Home;
