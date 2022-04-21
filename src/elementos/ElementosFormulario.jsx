@@ -6,7 +6,6 @@ const Formulario = styled.form`
     margin-bottom: 2rem;
     text-align: center;
     align-items: center;
-    
     //Medias Query
     @media (max-width: 490px) {
         flex-direction: column;
@@ -75,19 +74,21 @@ const Boton = styled.button`
     cursor: pointer;
     border-radius: 12px;
     outline-style: none;
-    background-color: rgb(91, 105, 226);
+    background-color: ${props => props.Rojo ? '#D32F2F' : 'rgb(91, 105, 226)'};
     color: #fff;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 
     svg{
         margin-left: .9rem;
+        margin-right: .3rem;
         font-size:20px;
         color: #fff;
+        display:inline-block;
     }
 
     &:hover{
         transition: ease-out .5s;
-        background-color: #4CAF50;
+        background-color: ${props => props.Rojo ? '#D32F2F' : 'rgb(91, 105, 226)'};
     };
 
     @media (max-width: 490px){

@@ -1,67 +1,83 @@
 import styled from "styled-components";
+
 const ContenedorNegocio = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   height: 100%;
-  margin-top: 1rem;
+  padding: 0px;
+  margin-top: 14px;
+`;
+
+const Formulario = styled.form`
+  padding: 0.4rem;
+  background-color: #fff;
+  margin-bottom: 2rem;
+  text-align: center;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  //Medias Query
+  @media (max-width: 490px) {
+    flex-direction: column;
+  }
+`;
+
+const ContenedorProductos = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin-top: 14px;
+`;
+
+const ContenedorInformacion = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin-top: 14px;
+  > h2{
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  
+  > p{
+    margin: 40px 0px;
+  }
 `;
 const Titulo = styled.h2`
   font-size: 2rem;
   text-align: center;
   text-transform: uppercase;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   cursor: pointer;
+  border-radius: 8px;
   &:hover {
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
     transition: all ease-in-out 0.4s;
-    border-bottom: 2px solid #165168;
   }
 `;
 
-const SubTitulo = styled.h4`
-  font-size: 2rem;
-  text-align: center;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-  color: #747575;
-  cursor: pointer;
-  &:hover {
+const ListaProductos = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  li {
+    padding: 0.5rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     transition: all ease-in-out 0.4s;
-    border-bottom: 2px solid #0f0f0f;
+    cursor: pointer;
+    text-transform: uppercase;
+    &:hover {
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+      transition: all ease-in-out 0.4s;
+    }
   }
 `;
 
-const ContenedorProductos = styled.select`
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  width: 50%;
-  height: 100%;
-  margin-top: 0.6rem;
-  cursor: pointer;
-  padding: 7px 10px;
-  outline: 0;
-  border: 0;
-  background: #f0f0f0;
-  color: #7b7b7b;
-  font-size: 1em;
-  color: #999;
-  font-family: "Quicksand", sans-serif;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
-  transition: all 0.25s ease;
-
-  &:hover {
-    background: #b1e8cd;
-    color: #333;
-  }
-`;
-
-const Producto = styled.option`
-  text-align: center;
-`;
 const Imagen = styled.img`
   width: 20rem;
   height: 20rem;
@@ -77,25 +93,12 @@ const Imagen = styled.img`
   }
 `;
 
-const Telefono = styled.h4`
-  font-size: 1.5rem;
-  text-align: center;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-  color: #60a4e4;
-  cursor: pointer;
-  &:hover {
-    transition: all ease-in-out 0.4s;
-    border-bottom: 2px solid #6d6d6d;
-  }
-`;
-
 export {
+  Titulo,
+  Imagen,
   ContenedorNegocio,
   ContenedorProductos,
-  Titulo,
-  Producto,
-  SubTitulo,
-  Imagen,
-  Telefono,
+  Formulario,
+  ContenedorInformacion,
+  ListaProductos
 };
