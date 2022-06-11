@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-//Importando los elementos del formulario
-import { Formulario, Input, Boton } from "../elementos/ElementosFormulario";
 //Importando los Icons
 import { ReactComponent as IconoRegistro } from "./../img/register.svg";
 //Importando funciones para validar el formulario
@@ -10,6 +8,7 @@ import useFormValidacion from "../Hooks/useFormValidacion";
 import RegistrarUsuario from "../Firebase/RegistrarUsuario";
 //Importando el toast y Toaster para las notificaciones
 import toast, { Toaster } from "react-hot-toast";
+import { BsPlusLg } from "react-icons/bs";
 const CrearCuenta = () => {
   //Llamando a la funcion que valida el formulario
   const { error, validacion, valido } = useFormValidacion();
@@ -91,56 +90,87 @@ const CrearCuenta = () => {
   //Renderizado del componente
   return (
     <>
-      <Titulo>
-        Registrate como Comerciante
-        <IconoRegistro />
-      </Titulo>
-      <Formulario onSubmit={(e) => onSubmit(e)}>
-        {error && error.nombre && <Error>{error.nombre}</Error>}
-        <Input
-          type="text"
-          name="nombre"
-          placeholder="NOMBRE"
-          value={datos.nombre}
-          onChange={(e) => handleChange(e)}
-        />
-        <Input
-          type="text"
-          name="apellido"
-          placeholder="APELLIDO"
-          value={datos.apellido}
-          onChange={(e) => handleChange(e)}
-        />
-        {error && error.apellido && <Error>{error.apellido}</Error>}
-        <Input
-          type="email"
-          name="correo"
-          placeholder="CORREO@CORREO.COM"
-          value={datos.correo}
-          onChange={(e) => handleChange(e)}
-        />
-        {error && error.correo && <Error>{error.correo}</Error>}
-        <Input
-          type="password"
-          name="contrasena"
-          placeholder="CONTRASEÑA"
-          id="contrasena"
-          autoComplete="true"
-          value={datos.contrasena}
-          onChange={(e) => handleChange(e)}
-        />
-        {error && error.contrasena && <Error>{error.contrasena}</Error>}
-        <Input
-          type="password"
-          name="contrasena2"
-          placeholder="CONFIRMAR CONTRASEÑA"
-          autoComplete="true"
-          value={datos.contrasena2}
-          onChange={(e) => handleChange(e)}
-        />
-        {error && error.contrasena2 && <Error>{error.contrasena2}</Error>}
-        <Boton>CREAR CUENTA</Boton>
-      </Formulario>
+      <div className="container-fluid p-2 my-3">
+        <IconoRegistro className="mx-auto mb-2" style={{width: '9rem', height:'auto'}} />
+        <div className="row justify-content-center align-items-center">
+            <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6">
+              <h1 className="text-dark">Registro</h1>
+              <form onSubmit={(e) => onSubmit(e)}>
+                {error && error.nombre && <Error>{error.nombre}</Error>}
+                <div className="form-group">
+                  <input 
+                  type="text" 
+                  name="nombre"
+                  placeholder="NOMBRE"
+                  className="form-control text-center"
+                  value={datos.nombre}
+                  autoFocus
+                  onChange={(e) => handleChange(e)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <input 
+                  type="text"
+                  name="apellido"
+                  placeholder="APELLIDO"
+                  className="form-control text-center"
+                  value={datos.apellido}
+                  onChange={(e) => handleChange(e)}
+                  />
+                {error && error.apellido && <Error>{error.apellido}</Error>}
+                </div>
+                  <div className="form-group">
+                    <input
+                      type="email"
+                      name="correo"
+                      placeholder="CORREO@CORREO.COM"
+                      className="form-control text-center"
+                      value={datos.correo}
+                      onChange={(e) => handleChange(e)}
+                    />
+                    {error && error.correo && <Error>{error.correo}</Error>}
+                  </div>
+
+                    <div className="form-group">
+                      <input
+                        type="password"
+                        name="contrasena"
+                        placeholder="CONTRASEÑA"
+                        className="form-control text-center"
+                        id="contrasena"
+                        autoComplete="true"
+                        value={datos.contrasena}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                    {error && error.contrasena && <Error>{error.contrasena}</Error>}
+                    <div className="form-group">
+                      <input
+                        type="password"
+                        name="contrasena2"
+                        placeholder="CONFIRMAR CONTRASEÑA"
+                        className="form-control text-center"
+                        autoComplete="true"
+                        value={datos.contrasena2}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                    {error && error.contrasena2 && <Error>{error.contrasena2}</Error>}
+                    <div className="my-1 justify-content-center aling-items-center">
+                      <button className="btn btn-success w-50 justify-content-center">
+                        <span className="aling-items-center justify-content-center">
+                          <BsPlusLg className="mx-1" fontSize="1.5rem"/>
+                        </span>
+                        Crear Cuenta
+                      </button>
+                    </div>
+                
+              </form>
+            </div>
+        </div>
+      </div>
+
       <Toaster
         position="top-center"
         toastOptions={{
@@ -151,22 +181,6 @@ const CrearCuenta = () => {
   );
 };
 
-const Titulo = styled.h2`
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 2rem;
-  margin-bottom: 2rem;
-
-  svg {
-    margin-left: 1rem;
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
-  @media (max-width: 340px) {
-    word-break: break-all;
-  }
-`;
 
 const Error = styled.p`
   color: red;

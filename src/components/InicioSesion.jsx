@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import { Formulario, Input, Boton } from "../elementos/ElementosFormulario";
 import {NavLink, useNavigate} from 'react-router-dom';
 import { ReactComponent as IconoLogin } from "../img/login.svg";
 //Importando la funcion de Inicio de Sesion
@@ -8,7 +6,7 @@ import IniciarSesion from "../Firebase/IniciarSesion";
 // Importando el toast y el Toaster
 import toast, {Toaster} from "react-hot-toast";
 //Importando iconos
-import {BsArrowClockwise} from "react-icons/bs";
+import {BsArrowClockwise, BsBoxArrowInRight} from "react-icons/bs";
 const InicioSesion = () => {
   const navigate = useNavigate();
   const [datos, setDatos] = useState({
@@ -71,64 +69,55 @@ const InicioSesion = () => {
   }
   return (
     <>
-      <ContenedorTitulo>
-        <Titulo>
-          Iniciar Sesión
-          <IconoLogin />
-        </Titulo>
-      </ContenedorTitulo>
+      <div className="container-fluid p-2 my-3">
+        <IconoLogin className="mx-auto mb-2" style={{width: '9rem', height:'auto'}}/>
+        <div className="row justify-content-center aling-items-center">
+          <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6">
+            {/* Formulario de Inicio de Sesion */}
+            <h1 className="text-dark">Inicia Sesión</h1>
+          <form onSubmit={onSubmit}>
+            <div className="form-group">
+              <input type="email" 
+                name="email"
+                placeholder="CORREO@CORREO.COM"
+                className="form-control text-center"
+                value={datos.email}
+                autoFocus
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
 
-      <Formulario onSubmit={onSubmit}>
-        <Input
-          type="email"
-          name="email"
-          placeholder="CORREO@CORREO.COM"
-          value={datos.email}
-          onChange={(e) => handleChange(e)}
-        />
-        <Input 
-            type="password" 
-            name="password" 
-            placeholder="CONTRASEÑA" 
-            value={datos.password}
-            onChange={(e) => handleChange(e)}
-            autoComplete="true"
-        />
-        <Boton>INICIAR SESIÓN</Boton>
-        <NavLink to="/restablecer-contrasena">
-            Restablecer Contraseña
-            <BsArrowClockwise />
-        </NavLink>
-      </Formulario>
+            <div className="form-group">
+              <input
+                type="password" 
+                name="password" 
+                placeholder="CONTRASEÑA" 
+                className="form-control text-center"
+                value={datos.password}
+                onChange={(e) => handleChange(e)}
+                autoComplete="true"
+              />
+            </div>
+            <div className="my-1 justify-content-center aling-items-center">
+                <button className="btn btn-success w-50 justify-content-center">
+                  <span className="aling-items-center justify-content-center">
+                    <BsBoxArrowInRight className="mx-2" fontSize="1.5rem"/>
+                  </span>
+                  Iniciar Sesión
+                </button>
+            </div>
+              <NavLink to="/restablecer-contrasena" className="d-flex aling-items-center justify-content-center">
+                <span className="mx-1">
+                  <BsArrowClockwise fontSize="1.5rem" />
+                </span>
+                Restablecer Contraseña
+              </NavLink>
+          </form>
+          </div>
+        </div>
+      </div>
         <Toaster />
     </>
   );
 };
-
-const ContenedorTitulo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  margin-bottom: 2rem;
-`;
-
-const Titulo = styled.h2`
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  letter-spacing: 1px;
-
-  svg {
-    margin-left: 1rem;
-    margin-top: 1rem;
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
-  @media (max-width: 340px) {
-    word-break: break-all;
-  }
-`;
 export default InicioSesion;
