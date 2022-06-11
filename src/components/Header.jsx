@@ -2,11 +2,12 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import {signOut, auth} from "./../Firebase/firebaseConfig"
 //Iconos
-import { BsDoorOpen, BsPersonPlus, BsHouse, BsShop, BsDoorClosedFill, BsDoorOpenFill } from "react-icons/bs";
+import { BsDoorOpen, BsPersonPlus, BsHouse, BsShop, BsFillDoorClosedFill } from "react-icons/bs";
 //Importando el boton de cerrar sesion
 
 // Importando la conexion a el contexto de User
-import { useAuth } from "../Context/AuthContext";
+import { useAuth} from "../Context/AuthContext";
+
 const Header = () => {
   const { user } = useAuth();
 
@@ -57,7 +58,7 @@ const Header = () => {
                       className="navbar-brand d-flex align-items-center"
                     >
                         <span className="mx-1">
-                          <BsPersonPlus fontSize="1.9rem" />
+                          <BsDoorOpen fontSize="1.9rem" />
                         </span>
                        Iniciar Sesion
                     </NavLink>
@@ -69,15 +70,15 @@ const Header = () => {
                   user ? (
                     <NavLink to="/" className="nav-link d-flex align-items-center" onClick={() => handleSignOut()}>
                         <span className="mx-1">
-                          <BsDoorOpenFill fontSize="1.9rem" /> 
+                          <BsFillDoorClosedFill fontSize="1.9rem" /> 
                         </span>
                       Salir
                     </NavLink>
                   ):
                   (
-                    <NavLink to="/" className="nav-link d-flex align-items-center">
+                    <NavLink to="/crear-cuenta" className="nav-link d-flex align-items-center">
                         <span className="mx-1">
-                          <BsDoorOpen fontSize="1.9rem" />
+                          <BsPersonPlus fontSize="1.9rem" />
                         </span>
                         Registrate
                     </NavLink>
