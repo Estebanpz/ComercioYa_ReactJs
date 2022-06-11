@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import styled from "styled-components";
+import {signOut, auth} from "./../Firebase/firebaseConfig"
 //Iconos
 import { BsDoorOpen, BsPersonPlus, BsHouse, BsShop, BsDoorClosedFill, BsDoorOpenFill } from "react-icons/bs";
 //Importando el boton de cerrar sesion
@@ -10,6 +10,10 @@ import { useAuth } from "../Context/AuthContext";
 const Header = () => {
   const { user } = useAuth();
 
+  // Funcion para cerrar sesion
+  const handleSignOut = () => {
+    signOut(auth);
+  }
   return (
     <header className="container-fluid py-1">
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark rounded">
@@ -55,7 +59,7 @@ const Header = () => {
                         <span className="mx-1">
                           <BsPersonPlus fontSize="1.9rem" />
                         </span>
-                      Iniciar Sesion
+                       Iniciar Sesion
                     </NavLink>
                   )
                 }
@@ -63,7 +67,7 @@ const Header = () => {
               <li className="nav-item">
                  {
                   user ? (
-                    <NavLink to="/" className="nav-link d-flex align-items-center">
+                    <NavLink to="/" className="nav-link d-flex align-items-center" onClick={() => handleSignOut()}>
                         <span className="mx-1">
                           <BsDoorOpenFill fontSize="1.9rem" /> 
                         </span>
