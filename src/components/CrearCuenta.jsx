@@ -91,83 +91,85 @@ const CrearCuenta = () => {
   return (
     <>
       <div className="container-fluid p-2 my-3">
-        <IconoRegistro className="mx-auto mb-2" style={{width: '9rem', height:'auto'}} />
+        <IconoRegistro
+          className="mx-auto mb-2"
+          style={{ width: "9rem", height: "auto" }}
+        />
         <div className="row justify-content-center align-items-center">
-            <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-              <h1 className="text-dark">Registro</h1>
-              <form onSubmit={(e) => onSubmit(e)}>
-                {error && error.nombre && <Error>{error.nombre}</Error>}
-                <div className="form-group">
-                  <input 
-                  type="text" 
+          <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6">
+            <h1 className="text-dark">Registro</h1>
+            <form onSubmit={(e) => onSubmit(e)}>
+              {error && error.nombre && <Error>{error.nombre}</Error>}
+              <div className="form-group">
+                <input
+                  type="text"
                   name="nombre"
                   placeholder="NOMBRE"
                   className="form-control text-center"
                   value={datos.nombre}
                   autoFocus
                   onChange={(e) => handleChange(e)}
-                  />
-                </div>
+                />
+              </div>
 
-                <div className="form-group">
-                  <input 
+              <div className="form-group">
+                <input
                   type="text"
                   name="apellido"
                   placeholder="APELLIDO"
                   className="form-control text-center"
                   value={datos.apellido}
                   onChange={(e) => handleChange(e)}
-                  />
+                />
                 {error && error.apellido && <Error>{error.apellido}</Error>}
-                </div>
-                  <div className="form-group">
-                    <input
-                      type="email"
-                      name="correo"
-                      placeholder="CORREO@CORREO.COM"
-                      className="form-control text-center"
-                      value={datos.correo}
-                      onChange={(e) => handleChange(e)}
-                    />
-                    {error && error.correo && <Error>{error.correo}</Error>}
-                  </div>
+              </div>
+              <div className="form-group">
+                <input
+                  type="email"
+                  name="correo"
+                  placeholder="CORREO@CORREO.COM"
+                  className="form-control text-center"
+                  value={datos.correo}
+                  onChange={(e) => handleChange(e)}
+                />
+                {error && error.correo && <Error>{error.correo}</Error>}
+              </div>
 
-                    <div className="form-group">
-                      <input
-                        type="password"
-                        name="contrasena"
-                        placeholder="CONTRASEÑA"
-                        className="form-control text-center"
-                        id="contrasena"
-                        autoComplete="true"
-                        value={datos.contrasena}
-                        onChange={(e) => handleChange(e)}
-                      />
-                    </div>
-                    {error && error.contrasena && <Error>{error.contrasena}</Error>}
-                    <div className="form-group">
-                      <input
-                        type="password"
-                        name="contrasena2"
-                        placeholder="CONFIRMAR CONTRASEÑA"
-                        className="form-control text-center"
-                        autoComplete="true"
-                        value={datos.contrasena2}
-                        onChange={(e) => handleChange(e)}
-                      />
-                    </div>
-                    {error && error.contrasena2 && <Error>{error.contrasena2}</Error>}
-                    <div className="my-1 justify-content-center aling-items-center">
-                      <button className="btn btn-success w-50 justify-content-center">
-                        <span className="aling-items-center justify-content-center">
-                          <BsPlusLg className="mx-1" fontSize="1.5rem"/>
-                        </span>
-                        Crear Cuenta
-                      </button>
-                    </div>
-                
-              </form>
-            </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  name="contrasena"
+                  placeholder="CONTRASEÑA"
+                  className="form-control text-center"
+                  id="contrasena"
+                  autoComplete="true"
+                  value={datos.contrasena}
+                  onChange={(e) => handleChange(e)}
+                />
+              </div>
+              {error && error.contrasena && <Error>{error.contrasena}</Error>}
+              <div className="form-group">
+                <input
+                  type="password"
+                  name="contrasena2"
+                  placeholder="CONFIRMAR CONTRASEÑA"
+                  className="form-control text-center"
+                  autoComplete="true"
+                  value={datos.contrasena2}
+                  onChange={(e) => handleChange(e)}
+                />
+              </div>
+              {error && error.contrasena2 && <Error>{error.contrasena2}</Error>}
+              <div className="my-1 justify-content-center aling-items-center">
+                <button className="btn btn-success w-50 justify-content-center">
+                  <span className="aling-items-center justify-content-center">
+                    <BsPlusLg className="mx-1" fontSize="1.5rem" />
+                  </span>
+                  Crear Cuenta
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
@@ -180,7 +182,6 @@ const CrearCuenta = () => {
     </>
   );
 };
-
 
 const Error = styled.p`
   color: red;

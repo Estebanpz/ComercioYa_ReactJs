@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {NavLink} from "react-router-dom";
 import { useAuth } from "./../Context/AuthContext";
 import { useParams } from "react-router-dom";
 import useObtenerNegocio from "../Hooks/useObtenerNegocio";
@@ -20,6 +21,8 @@ import { BsCheckCircle, BsXCircle } from "react-icons/bs";
 import EfectoDeCarga from "../elementos/EfectoDeCarga";
 // Importando el toast y Toaster
 import toast, { Toaster } from "react-hot-toast";
+// Importanto SVG Crear Negocio
+import {ReactComponent as IconoCrearNegocio} from "../img/crear-negocio-persona.svg";
 const Negocio = () => {
   const { user } = useAuth();
   const { id } = useParams();
@@ -204,7 +207,16 @@ const Negocio = () => {
         </>
       ) : (
         <>
-          <h3>No hay negocio registrado</h3>
+          <h3 className="my-2 mx-auto">No tienes negocio aún... aunque</h3>
+            <div className="justify-content-center align-items-center mx-auto my-2">
+              <span className="mx-auto">
+                <IconoCrearNegocio fontSize="9rem"/>
+              </span>
+              <NavLink to="/crear-negocio" 
+                  className="nav-link link-active rounded btn btn-info">
+                    Crear Negocio
+              </NavLink>
+            </div>
         </>
       )}
     </>

@@ -13,6 +13,7 @@ import InicioSesion from './components/InicioSesion';
 import CrearCuenta from './components/CrearCuenta';
 import RestablecerContrasena from './components/RestabalecerContrasena';
 import Negocio from './components/Negocio';
+import CrearNegocio from './components/CrearNegocio';
 //Importando el AuthProvider
 import { AuthProvider } from "./Context/AuthContext";
 //Importando Ruta Privada
@@ -34,6 +35,15 @@ function App() {
                   <Negocio />
                 </RutaPrivada>
               } />
+
+              <Route 
+                path='/crear-negocio'
+                element={
+                  <RutaPrivada>
+                    <CrearNegocio />
+                  </RutaPrivada>
+                }
+              />
               <Route path="*" element={<Error404 />} />
             </Routes>
           </Main>
@@ -52,7 +62,6 @@ const Main = styled.div`
   justify-content: center;
   align-items: center;
   margin:10px 10px 10px 10px;
-  outline: 1px solid orangered;
   background: #ffff;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(129, 129, 129, 0.8);
