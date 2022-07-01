@@ -90,14 +90,16 @@ const CrearCuenta = () => {
   //Renderizado del componente
   return (
     <>
-      <div className="container-fluid p-2 my-3">
-        <IconoRegistro
-          className="mx-auto mb-2"
-          style={{ width: "9rem", height: "auto" }}
-        />
-        <div className="row justify-content-center align-items-center">
-          <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-            <h1 className="text-dark">Registro</h1>
+      <div className="row w-100">
+        <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 justify-content-center">
+          <Titulo>
+            <h1>Registrate</h1>
+          </Titulo>
+          <ContenedorSvg>
+            <IconoRegistro />
+          </ContenedorSvg>
+
+          <div className="col-md-6 offset-md-3">
             <form onSubmit={(e) => onSubmit(e)}>
               {error && error.nombre && <Error>{error.nombre}</Error>}
               <div className="form-group">
@@ -161,7 +163,7 @@ const CrearCuenta = () => {
               </div>
               {error && error.contrasena2 && <Error>{error.contrasena2}</Error>}
               <div className="my-1 justify-content-center aling-items-center">
-                <button className="btn btn-success w-50 justify-content-center">
+                <button className="btn btn-success btn-block justify-content-center">
                   <span className="aling-items-center justify-content-center">
                     <BsPlusLg className="mx-1" fontSize="1.5rem" />
                   </span>
@@ -182,6 +184,29 @@ const CrearCuenta = () => {
     </>
   );
 };
+
+const ContenedorSvg = styled.div`
+  width: 100%;
+  height: auto;
+  justify-content: center;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+
+  & > svg {
+    width: 40%;
+    height: auto;
+    padding: 0;
+    margin: 0;
+  }
+`;
+
+const Titulo = styled.div`
+  margin-top: 2rem;
+  padding: 0;
+  box-shadow: 0px 1.25rem 2.5rem rgba(0, 0, 0, 0.05);
+  text-align: center;
+`;
 
 const Error = styled.p`
   color: red;

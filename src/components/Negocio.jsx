@@ -7,8 +7,6 @@ import EliminarNegocio from "../Firebase/EliminarNegocio";
 //Importando iconos
 import { AiOutlineSave } from "react-icons/ai";
 import { BsCheckCircle, BsXCircle, BsTrash2 } from "react-icons/bs";
-//Importando Efecto de Carga
-import EfectoDeCarga from "../elementos/EfectoDeCarga";
 // Importando el toast y Toaster
 import toast, { Toaster } from "react-hot-toast";
 // Importanto SVG Crear Negocio
