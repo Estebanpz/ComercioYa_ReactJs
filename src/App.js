@@ -24,7 +24,7 @@ function App() {
       <BrowserRouter>
         
           <Header />
-          <Main>
+          <main className="container rounded p-3">
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/inicio-sesion' element={<InicioSesion />} />
@@ -46,26 +46,11 @@ function App() {
               />
               <Route path="*" element={<Error404 />} />
             </Routes>
-          </Main>
+          </main>
        
       </BrowserRouter>
     </AuthProvider>
   );
 }
 
-
-const Main = styled.div`
-  width: 98%;
-  height:100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin:10px 10px 10px 10px;
-  background: #ffff;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(129, 129, 129, 0.8);
-  text-align: center;
-  height: auto;
-`;
 export default App;

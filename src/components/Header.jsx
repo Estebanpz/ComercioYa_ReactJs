@@ -24,31 +24,32 @@ const Header = () => {
   return (
     <header className="container-fluid py-1">
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark rounded">
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <div className="container m-auto">
-            <NavLink to="/" className="navbar-brand d-flex align-items-center">
-              <span className="mx-1">
-                <BsHouse fontSize="1.9rem" />
-              </span>
-              Comercio Ya
-            </NavLink>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
+        <NavLink to="/" className="navbar-brand d-flex align-items-center">
+          <span className="mx-1">
+            <BsHouse fontSize="1.9rem" />
+          </span>
+          Comercio Ya
+        </NavLink>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <div className="container-fluid">
             {/* Menú de Navegación*/}
-            <ul className="navbar-nav">
+            <ul className="navbar-nav d-flex ml-auto">
               <li className="nav-item">
                 {user ? (
                   <NavLink
-                    to={`/negocio/${user.id}`}
+                    to={`/negocio/${user.uid}`}
                     className="navbar-brand d-flex align-items-center"
                   >
                     <span className="mx-1">

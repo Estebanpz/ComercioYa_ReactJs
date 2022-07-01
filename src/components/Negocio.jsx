@@ -1,28 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "./../Context/AuthContext";
 import { useParams } from "react-router-dom";
 import useObtenerNegocio from "../Hooks/useObtenerNegocio";
-//Importando componentes visuales del Negocio
-import { Input, Boton } from "./../elementos/ElementosFormulario";
-import {
-  ContenedorNegocio,
-  Formulario,
-  ContenedorProductos,
-  ContenedorInformacion,
-  ListaProductos,
-  Titulo,
-} from "../elementos/ElementosDelNegocio";
-import CheckBoxCategoria from "../elementos/CheckBoxCategoria";
+import EliminarNegocio from "../Firebase/EliminarNegocio";
 //Importando iconos
 import { AiOutlineSave } from "react-icons/ai";
-import { BsCheckCircle, BsXCircle } from "react-icons/bs";
+import { BsCheckCircle, BsXCircle, BsTrash2 } from "react-icons/bs";
 //Importando Efecto de Carga
 import EfectoDeCarga from "../elementos/EfectoDeCarga";
 // Importando el toast y Toaster
 import toast, { Toaster } from "react-hot-toast";
 // Importanto SVG Crear Negocio
-import {ReactComponent as IconoCrearNegocio} from "../img/crear-negocio-persona.svg";
+import { ReactComponent as IconoCrearNegocio } from "../img/crear-negocio-persona.svg";
+import styled from "styled-components";
 const Negocio = () => {
   const { user } = useAuth();
   const { id } = useParams();
@@ -36,30 +27,24 @@ const Negocio = () => {
     productos: "",
   });
 
-  //Destructuro los productos para convertirlos en un array
-  const [productos, setProductos] = useState([]);
   //Invoco la funcion que me retorna el negocio del Usuario
-  const [negocio] = useObtenerNegocio(id);
-  // Estado para las categorias y se lo paso en props a CheckBoxCategoria
-  const [categorias, setcategorias] = useState([]);
+  const [negocio, cambiarNegocio] = useObtenerNegocio(id);
+
   //Invoco la funcion de notificacion Toast
   useEffect(() => {
-    if (negocio) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (negocio) {
         setCargando(false);
         setDatosNegocio({
-          nombre: negocio.Nombre,
-          descripcion: negocio.Descripcion,
-          imagen: negocio.Imagen,
-          telefono: negocio.Telefono,
-          direccion: negocio.Direccion,
-          productos: negocio.Producto,
+          nombre: negocio[0]?.nombre,
+          descripcion: negocio[0]?.descripcion,
+          imagen: negocio[0]?.imagen,
+          telefono: negocio[0]?.telefono,
+          direccion: negocio[0]?.direccion,
+          productos: negocio[0]?.productos,
         });
-        let listaProductos = negocio.Producto;
-        let listaProductosArray = listaProductos.split(",");
-        setProductos(listaProductosArray);
-      }, 300);
-    }
+      }
+    }, 1000);
   }, [negocio, user, cargando]);
 
   // Funcion que maneja el cambio de los inputs
@@ -100,7 +85,8 @@ const Negocio = () => {
     toast((t) => (
       <>
         <span>¿Desea guardar los cambios?</span>
-        <Boton
+        <button
+          className="btn btn-info"
           onClick={() => {
             toast.success("Cambios guardados con exito", {
               style: {
@@ -117,26 +103,17 @@ const Negocio = () => {
         >
           <BsCheckCircle />
           Si
-        </Boton>
-        <Boton
-          Rojo
+        </button>
+        <button
+          className="btn btn-danger"
           onClick={() => {
-            toast.error("Cambios no guardados", {
-              style: {
-                background: "red",
-                color: "white",
-                fontSize: ".9rem",
-                fontWeight: "bold",
-                textTransform: "uppercase",
-                borderRadius: "10px",
-              },
-            });
+            toast.error("Cambios no guardados");
             toast.dismiss(t.id);
           }}
         >
           <BsXCircle />
           No
-        </Boton>
+        </button>
       </>
     ));
   };
@@ -146,81 +123,223 @@ const Negocio = () => {
     console.log(DatosNegocio);
     notificacion();
   };
+
+  const DeleteNegocio = async () => {
+    toast((t) => (
+      <>
+        <span>¿Deseas eliminar tu negocio?</span>
+        <button
+          className="btn btn-info"
+          onClick={async () => {
+            await EliminarNegocio(user.uid);
+            cambiarNegocio("");
+
+            toast.error("Negocio Eliminado", {
+              className: "btn btn-danger text-uppercase rounded d-block",
+            });
+            toast.dismiss(t.id);
+          }}
+        >
+          <BsCheckCircle />
+          Si
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            toast.success("Tu negocio sigue a salvo...", {
+              className: "btn btn-info text-uppercase rounded",
+            });
+            toast.dismiss(t.id);
+          }}
+        >
+          <BsXCircle />
+          No
+        </button>
+      </>
+    ));
+  };
+
   return (
     <>
       {negocio.length !== 0 && !cargando ? (
-        <ContenedorNegocio>
-          <Toaster />
-          <Formulario onSubmit={(e) => onSubmit(e)}>
-            <ContenedorInformacion>
-              <Input
-                type="text"
-                name="nombre"
-                defaultValue={DatosNegocio.nombre}
-                onChange={(e) => handleChange(e)}
-              />
-              <Input
-                type="text"
-                name="descripcion"
-                defaultValue={DatosNegocio.descripcion}
-                onChange={(e) => handleChange(e)}
-              />
+        <div className="container-fluid bg-dark rounded p-4">
+          <div className="row">
+            <Toaster />
+            <div className="col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-2 offset-sm-1 offset-md-1 offset-lg-1 offset-xl-1">
+              <form onSubmit={(e) => onSubmit(e)}>
+                <div className="card bg-light mt-2 p-3">
+                  <div className="form-group mt-2">
+                    <label htmlFor="nombre">Nombre del Negocio</label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      id="nombre"
+                      defaultValue={DatosNegocio.nombre}
+                      onChange={(e) => handleChange(e)}
+                      className="form-control text-center"
+                    />
+                  </div>
 
-              <Input
-                type="text"
-                name="direccion"
-                defaultValue={DatosNegocio.direccion}
-                onChange={(e) => handleChange(e)}
-              />
-              <Input
-                type="tel"
-                name="telefono"
-                defaultValue={DatosNegocio.telefono}
-                onChange={(e) => handleChange(e)}
-              />
-              <Boton type="submit">
-                <AiOutlineSave />
-                Guardar
-              </Boton>
-            </ContenedorInformacion>
-            <ContenedorProductos>
-              <Titulo> Tus Productos</Titulo>
-              <ListaProductos>
-                {productos.map((producto, index) => (
-                  <li key={index}>{producto}</li>
-                ))}
-              </ListaProductos>
-              <Titulo>Categorias</Titulo>
-              <CheckBoxCategoria categorias={categorias} setcategorias={setcategorias}/>
+                  <div className="form-group mt-2">
+                    <label htmlFor="descripcion">Descripcion</label>
+                    <input
+                      type="text"
+                      name="descripcion"
+                      id="descripcion"
+                      defaultValue={DatosNegocio.descripcion}
+                      onChange={(e) => handleChange(e)}
+                      className="form-control text-center"
+                    />
+                  </div>
+                  <div className="form-group mt-2">
+                    <label htmlFor="direccion">Direccion</label>
+                    <input
+                      type="text"
+                      name="direccion"
+                      id="direccion"
+                      defaultValue={DatosNegocio.direccion}
+                      onChange={(e) => handleChange(e)}
+                      className="form-control text-center"
+                    />
+                  </div>
 
-              <ListaProductos>
-                {categorias.map((categoria, index) => (
-                  <li key={index}>{categoria}</li>
-                ))}
-              </ListaProductos>
-            </ContenedorProductos>
-          </Formulario>
-        </ContenedorNegocio>
+                  <div className="form-group mt-2">
+                    <label htmlFor="telefono">Telefono / Contacto</label>
+                    <input
+                      type="tel"
+                      name="telefono"
+                      id="telefono"
+                      defaultValue={DatosNegocio.telefono}
+                      onChange={(e) => handleChange(e)}
+                      className="form-control text-center"
+                    />
+                  </div>
+                  <div className="m-2 align-items-center justify-content-center">
+                    <button type="submit" className="btn btn-success btn-block">
+                      <span className="mx-1">
+                        <AiOutlineSave />
+                      </span>
+                      Guardar
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <div className="justify-content-center align-items-center">
+                <button
+                  type="submit"
+                  className="btn btn-danger mt-1 btn-block"
+                  onClick={() => DeleteNegocio(user.uid)}
+                >
+                  <span className="mx-1">
+                    <BsTrash2 />
+                  </span>
+                  Eliminar
+                </button>
+              </div>
+            </div>
+            {DatosNegocio.imagen && (
+              <div className="col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-2 offset-sm-1 offset-md-1 offset-lg-1 offset-xl-1">
+                <div
+                  className="card bg-light mt-2 p-3"
+                  style={{ width: "50%", height: "98%" }}
+                >
+                  <p className="card-title">Imagen del Negocio</p>
+                  <div className="card-body">
+                    <img
+                      src={DatosNegocio.imagen}
+                      className="img-fluid rounded"
+                      alt={DatosNegocio.descripcion}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       ) : cargando ? (
         <>
-          <EfectoDeCarga />
+          <div className="justify-content-center aling-items-center my-4">
+            <Loader>
+              <Circle />
+              <Circle />
+              <Circle />
+            </Loader>
+          </div>
         </>
       ) : (
-        <>
-          <h3 className="my-2 mx-auto">No tienes negocio aún... aunque</h3>
-            <div className="justify-content-center align-items-center mx-auto my-2">
-              <span className="mx-auto">
-                <IconoCrearNegocio fontSize="9rem"/>
-              </span>
-              <NavLink to="/crear-negocio" 
-                  className="nav-link link-active rounded btn btn-info">
-                    Crear Negocio
-              </NavLink>
-            </div>
-        </>
+        <div className="w-100">
+          <Titulo>
+            <h1>No has registrado tu negocio aun.</h1>
+          </Titulo>
+          <ContenedorSvg to="/crear-negocio" className="nav-link link-active">
+            <IconoCrearNegocio />
+          </ContenedorSvg>
+        </div>
       )}
     </>
   );
 };
+
+const ContenedorSvg = styled(NavLink)`
+  width: 90%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+
+  & > svg {
+    width: 90%;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+`;
+
+const Titulo = styled.div`
+  margin-top: 2rem;
+  padding: 0;
+  box-shadow: 0px 1.25rem 2.5rem rgba(0, 0, 0, 0.05);
+  text-align: center;
+`;
+
+const Loader = styled.div`
+  height: auto;
+  width: 100%;
+  border-radius: 50%;
+  display: flex;
+`;
+
+const Circle = styled.div`
+  background: deepskyblue;
+  width: 20px;
+  height: 20px;
+  margin: 0 4px;
+  border-radius: 50%;
+  animation: animate 2s infinite linear;
+
+  > :nth-child(1) {
+    animation-delay: 0.5s;
+  }
+
+  > :nth-child(2) {
+    animation-delay: 1s;
+  }
+
+  > :nth-child(3) {
+    animation-delay: 1.5s;
+  }
+
+  @keyframes animate {
+    0%,
+    100% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+`;
 
 export default Negocio;

@@ -9,7 +9,7 @@ const ListaProductos = ({
   categorias,
   setCategorias,
 }) => {
-  if ((productos, setProductos)) {
+  if ((productos)) {
     return productos.map((producto, index) => (
       <Fragment key={index}>
         <li className="list-group-item d-inline" >
@@ -21,7 +21,7 @@ const ListaProductos = ({
               onClick={() => {
                 const nuevosProductos = [...productos];
                 nuevosProductos.splice(index, 1);
-                setProductos(nuevosProductos);
+                productos = nuevosProductos;
                 toast.error("Producto eliminado");
               }}
             />
@@ -33,7 +33,7 @@ const ListaProductos = ({
     ));
   }
 
-  if (categorias && setCategorias) {
+  if (categorias) {
     return categorias.map((categoria, index) => (
       <Fragment key={index}>
         <li className="list-group-item d-inline">
@@ -45,7 +45,7 @@ const ListaProductos = ({
               onClick={() => {
                 const nuevasCategorias = [...categorias];
                 nuevasCategorias.splice(index, 1);
-                setCategorias(nuevasCategorias);
+                categorias = nuevasCategorias;
                 toast.error("Categoria eliminado");
               }}
             />
