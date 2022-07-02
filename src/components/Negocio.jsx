@@ -42,7 +42,7 @@ const Negocio = () => {
           productos: negocio[0]?.productos,
         });
       }
-    }, 1000);
+    }, 300);
   }, [negocio, user, cargando]);
 
   // Funcion que maneja el cambio de los inputs
@@ -160,108 +160,17 @@ const Negocio = () => {
   return (
     <>
       {negocio.length !== 0 && !cargando ? (
-        <div className="container-fluid bg-dark rounded p-4">
-          <div className="row">
-            <Toaster />
-            <div className="col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-2 offset-sm-1 offset-md-1 offset-lg-1 offset-xl-1">
-              <form onSubmit={(e) => onSubmit(e)}>
-                <div className="card bg-light mt-2 p-3">
-                  <div className="form-group mt-2">
-                    <label htmlFor="nombre">Nombre del Negocio</label>
-                    <input
-                      type="text"
-                      name="nombre"
-                      id="nombre"
-                      defaultValue={DatosNegocio.nombre}
-                      onChange={(e) => handleChange(e)}
-                      className="form-control text-center"
-                    />
-                  </div>
-
-                  <div className="form-group mt-2">
-                    <label htmlFor="descripcion">Descripcion</label>
-                    <input
-                      type="text"
-                      name="descripcion"
-                      id="descripcion"
-                      defaultValue={DatosNegocio.descripcion}
-                      onChange={(e) => handleChange(e)}
-                      className="form-control text-center"
-                    />
-                  </div>
-                  <div className="form-group mt-2">
-                    <label htmlFor="direccion">Direccion</label>
-                    <input
-                      type="text"
-                      name="direccion"
-                      id="direccion"
-                      defaultValue={DatosNegocio.direccion}
-                      onChange={(e) => handleChange(e)}
-                      className="form-control text-center"
-                    />
-                  </div>
-
-                  <div className="form-group mt-2">
-                    <label htmlFor="telefono">Telefono / Contacto</label>
-                    <input
-                      type="tel"
-                      name="telefono"
-                      id="telefono"
-                      defaultValue={DatosNegocio.telefono}
-                      onChange={(e) => handleChange(e)}
-                      className="form-control text-center"
-                    />
-                  </div>
-                  <div className="m-2 align-items-center justify-content-center">
-                    <button type="submit" className="btn btn-success btn-block">
-                      <span className="mx-1">
-                        <AiOutlineSave />
-                      </span>
-                      Guardar
-                    </button>
-                  </div>
-                </div>
-              </form>
-              <div className="justify-content-center align-items-center">
-                <button
-                  type="submit"
-                  className="btn btn-danger mt-1 btn-block"
-                  onClick={() => DeleteNegocio(user.uid)}
-                >
-                  <span className="mx-1">
-                    <BsTrash2 />
-                  </span>
-                  Eliminar
-                </button>
-              </div>
-            </div>
-            {DatosNegocio.imagen && (
-              <div className="col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-2 offset-sm-1 offset-md-1 offset-lg-1 offset-xl-1">
-                <div
-                  className="card bg-light mt-2 p-3"
-                  style={{ width: "50%", height: "98%" }}
-                >
-                  <p className="card-title">Imagen del Negocio</p>
-                  <div className="card-body">
-                    <img
-                      src={DatosNegocio.imagen}
-                      className="img-fluid rounded"
-                      alt={DatosNegocio.descripcion}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        <> </>
       ) : cargando ? (
         <>
-          <div className="justify-content-center aling-items-center my-4">
-            <Loader>
-              <Circle />
-              <Circle />
-              <Circle />
-            </Loader>
+          <div className="row justify-content-center aling-items-center my-4">
+            <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+              <Loader>
+                <Circle />
+                <Circle />
+                <Circle />
+              </Loader>
+            </div>
           </div>
         </>
       ) : (
