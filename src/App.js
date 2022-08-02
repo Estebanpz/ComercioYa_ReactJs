@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import styled from 'styled-components';
 //Importando Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.js';
@@ -12,8 +11,8 @@ import Header from './components/Header';
 import InicioSesion from './components/InicioSesion';
 import CrearCuenta from './components/CrearCuenta';
 import RestablecerContrasena from './components/RestabalecerContrasena';
-import Negocio from './components/Negocio';
 import CrearNegocio from './components/CrearNegocio';
+import Negocio from './components/Negocio';
 //Importando el AuthProvider
 import { AuthProvider } from "./Context/AuthContext";
 //Importando Ruta Privada

@@ -23,7 +23,7 @@ const Header = () => {
   };
   return (
     <header className="container-fluid py-1">
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark rounded">
+      <nav className="navbar navbar-expand-lg navbar-dark rounded" style={{backgroundColor: '#1E92E0', position:'static'}}>
         <NavLink to="/" className="navbar-brand d-flex align-items-center">
           <span className="mx-1">
             <BsHouse fontSize="1.9rem" />

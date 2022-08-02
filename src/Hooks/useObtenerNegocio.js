@@ -1,46 +1,38 @@
 import { db } from "../Firebase/firebaseConfig";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useState, useEffect } from "react";
+import { useAuth } from "../Context/AuthContext";
 
-const useObtenerNegocio = (id) => {
+const useObtenerNegocio = () => {
   const [negocio, cambiarNegocio] = useState([]);
-
+  const { user } = useAuth();
 
   useEffect(() => {
-
-    async function main() {
-      await obtenerNegocio();
+    if (user) {
+      let consulta = query(
+        collection(db, "Comerciantes"),
+        where("userId", "==", user.uid)
+      );
+      const unSubscribe = onSnapshot(consulta, (snapshot) => {
+        const negocio = snapshot.docs.map((doc) => {
+          return {
+            id: doc.id,
+            ...doc.data()
+          }
+        });
+        cambiarNegocio(negocio)
+      }, (error) => {
+        console.log(error);
+      })
+      return () => unSubscribe();
+    } else {
+      return;
     }
 
-    main()
-    return () => {
-      cambiarNegocio('');
-    };
-  }, [id]);
+  }, [user]);
 
-
-  const obtenerNegocio = async () => {
-    const referencia = collection(db, "Comerciantes");
-    let consulta = query(referencia, where('Userid', '==', id));
-    let resultado = await getDocs(consulta);
-    let arrayAux = []
-
-    resultado.forEach((doc) => {
-      if (doc.exists()) {
-        arrayAux.push(doc.data())
-      } else {
-        console.log('No existe negocio para este usuario');
-      }
-
-    });
-
-    console.log(arrayAux);
-    cambiarNegocio(arrayAux);
-  }
-
-  return [negocio, cambiarNegocio];
-
-};
+  return negocio;
+}
 
 
 export default useObtenerNegocio;

@@ -6,8 +6,8 @@ import { ReactComponent as IconoRegistro } from "./../img/register.svg";
 import useFormValidacion from "../Hooks/useFormValidacion";
 //Importando la funcion para registar el usuario en Firebase
 import RegistrarUsuario from "../Firebase/RegistrarUsuario";
-//Importando el toast y Toaster para las notificaciones
-import toast, { Toaster } from "react-hot-toast";
+//Importando el sweet alert
+
 import { BsPlusLg } from "react-icons/bs";
 const CrearCuenta = () => {
   //Llamando a la funcion que valida el formulario
@@ -45,15 +45,6 @@ const CrearCuenta = () => {
           datos.nombre,
           datos.apellido
         );
-        toast.success("Usuario Registrado con Exito", {
-          icon: "👏",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-            fontSize: "1.5rem",
-          },
-        });
 
         setDatos({
           nombre: "",
@@ -66,24 +57,24 @@ const CrearCuenta = () => {
         switch (error.code) {
           case "auth/email-already-in-use":
             setErrorRegistro("El correo ya esta en uso");
-            toast.error(errorRegistro);
+
             break;
 
           case "auth/invalid-email":
             setErrorRegistro("El correo no es valido");
-            toast.error(errorRegistro);
+
             break;
 
           case "auth/weak-password":
             setErrorRegistro("La contraseña es muy debil");
-            toast.error(errorRegistro);
+
             break;
           default:
             break;
         }
       }
     } else {
-      toast.error("Por favor llena todos los campos");
+      
     }
   }; // Fin del onSubmit
 
@@ -174,13 +165,6 @@ const CrearCuenta = () => {
           </div>
         </div>
       </div>
-
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          progress: true,
-        }}
-      />
     </>
   );
 };

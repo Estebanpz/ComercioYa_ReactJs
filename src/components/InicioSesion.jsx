@@ -1,19 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "./../Context/AuthContext";
 import { ReactComponent as IconoLogin } from "../img/login.svg";
 //Importando la funcion de Inicio de Sesion
 import IniciarSesion from "../Firebase/IniciarSesion";
-// Importando el toast y el Toaster
-import toast, { Toaster } from "react-hot-toast";
+import swal from "sweetalert";
+// Importando el sweet alert
 //Importando iconos
 import { BsArrowClockwise, BsBoxArrowInRight } from "react-icons/bs";
 import styled from "styled-components";
 const InicioSesion = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [datos, setDatos] = useState({
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    } else if (user && !user.emailVerified) {
+      swal("Usuario", "El correo registrado no se ha verificado", "info");
+      navigate("/inicio-sesion");
+    }
+  }, [user,navigate]);
 
   //Manejo de cambios en los inputs
   const handleChange = (e) => {
@@ -23,42 +34,30 @@ const InicioSesion = () => {
     });
   };
 
-  //Styles del toast mode Dark
-  const darkMode = {
-    style: {
-      borderRadius: "10px",
-      background: "#333",
-      color: "#fff",
-    },
-  };
-
   // Evento de submit
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(datos);
 
     if (datos.email !== "" && datos.password !== "") {
       try {
-        await IniciarSesion(datos.email, datos.password);
-        toast.success("Bienvenido", darkMode);
-        setTimeout(() => {
+        if (await IniciarSesion(datos.email, datos.password)) {
           navigate("/");
-        }, 700);
+        }
       } catch (error) {
         if (error.code === "auth/wrong-password") {
-          toast.error("La contraseña es incorrecta", darkMode);
           setDatos({
             ...datos,
             password: "",
           });
+          swal("Error", "contraseña incorrecta", "error");
         }
 
         if (error.code === "auth/user-not-found") {
-          toast.error("El usuario no existe", darkMode);
           setDatos({
             ...datos,
             email: "",
           });
+          swal("Error", "usuario no registrado", "error");
         }
         console.log(error);
         setDatos({
@@ -67,7 +66,11 @@ const InicioSesion = () => {
         });
       }
     } else {
-      toast.error("Debes llenar todos los campos", darkMode);
+      swal(
+        "Importante",
+        "Por favor proporcione un correo y contraseña",
+        "info"
+      );
     }
   };
   return (
@@ -128,7 +131,6 @@ const InicioSesion = () => {
           </form>
         </div>
       </div>
-      <Toaster />
     </>
   );
 };

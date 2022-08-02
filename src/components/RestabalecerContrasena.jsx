@@ -1,21 +1,13 @@
 import React, { useState } from "react";
 // Importando funcion de Restablecer Contraseña
 import RestablecerPassword from "../Firebase/RestablecerPassword";
-//Importando el toast y el Toaster
-import toast, { Toaster } from "react-hot-toast";
+//Importando el sweet alert
+import swal from "sweetalert";
 //Importando SVG de password
 import { ReactComponent as Password } from "../img/password.svg";
 import styled from "styled-components";
 const RestablecerContrasena = () => {
   const [email, setEmail] = useState("");
-  //Styles del toast mode Dark
-  const darkMode = {
-    style: {
-      borderRadius: "10px",
-      background: "#333",
-      color: "#fff",
-    },
-  };
   // handleChange
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -27,16 +19,28 @@ const RestablecerContrasena = () => {
     console.log(email);
     if (email !== "") {
       try {
-        await RestablecerPassword(email);
-        toast.success("Se ha enviado un correo a tu cuenta.", darkMode);
+        try {
+          await RestablecerPassword(email);
+          swal(
+            "Completado",
+            "Revisa tu bandeja en el correo registrado y verificalo",
+            "success"
+          );
+        } catch (error) {
+          console.error(error);
+        }
       } catch (error) {
         if (error.code === "auth/user-not-found") {
-          toast.error("El usuario no existe", darkMode);
+          swal(
+            "Error",
+            "El email introducido no existe, por favor verifica los datos",
+            "error"
+          );
         }
         setEmail("");
       }
     } else {
-      toast.error("Proporciona un email.", darkMode);
+      swal("Espera un momento", "Proporciona un email valido", "error");
       setEmail("");
     }
   };
@@ -73,7 +77,6 @@ const RestablecerContrasena = () => {
           </form>
         </div>
       </div>
-      <Toaster />
     </>
   );
 };
