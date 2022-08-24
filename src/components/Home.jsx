@@ -2,53 +2,85 @@ import React from "react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useObtenerNegocios from "../Hooks/useObtenerNegocios";
-import Comerciantes from "./Comerciantes";
+import ListaComerciantes from "./ListaComerciantes";
+
 import { ReactComponent as NoHayNegocio } from "./../img/no-hay-negocios.svg";
+import { Contenedor } from "./../elementos/ElementosFormulario";
 const Home = () => {
   const [cargando, setCargando] = useState(true);
   const [negocios, setNegocios] = useObtenerNegocios();
 
+  // API RICK AND MORTY , Probando estilos de posibles tarjetas
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState([]);
+
+  const nextPage = () => {
+    setPage(page + 1);
+  };
+
+  const backPage = () => {
+    setPage(page - 1);
+  };
+
   useEffect(() => {
-    if (negocios) {
+    setCargando(true);
+    async function fetchData() {
+      const data = await fetch(
+        `https://rickandmortyapi.com/api/character/?page=${page}`
+      );
+
+      const { results } = await data.json();
+      setData(results);
       setCargando(false);
-      console.log(negocios);
     }
 
+    fetchData();
     return () => {
-      setNegocios([]);
+      setData([]);
     };
-  }, []);
+  }, [page]);
 
-  return (
+  if (cargando === true) {
+    return (
+      <Contenedor>
+        <Loader>
+          <Circle />
+          <Circle />
+          <Circle />
+        </Loader>
+      </Contenedor>
+    );
+  }
+
+  if (data.length === 0) {
     <>
-      {cargando ? (
-        <>
-          <div className="justify-content-center aling-items-center my-4">
-            <Loader>
-              <Circle />
-              <Circle />
-              <Circle />
-            </Loader>
-          </div>
-        </>
-      ) : negocios.length === 0 ? (
-        <ContenedorSvg>
-          <Titulo>
-            <h1>No hay negocios registrados</h1>
-          </Titulo>
-          <NoHayNegocio />
-        </ContenedorSvg>
-      ) : !cargando && negocios.length > 0 ? (
-        <>
-          <div className="row">
-            <Comerciantes comerciantes={negocios} />
-          </div>
-        </>
-      ) : (
-        <h1>Aún no hay negocios en el Comercio Ya </h1>
-      )}
-    </>
-  );
+      <ContenedorSvg>
+        <Titulo>
+          <h1>No hay negocios registrados</h1>
+        </Titulo>
+        <NoHayNegocio />
+      </ContenedorSvg>
+    </>;
+  }
+
+  if (!cargando && data.length > 0) {
+    return (
+      <>
+        <ContenedorBtns>
+          <Btn type="button" onClick={() => nextPage()}>
+            Siguiente
+          </Btn>
+          <Btn type="button" Rojo onClick={() => backPage()}>
+            Atrás
+          </Btn>
+          pagina:{page}
+        </ContenedorBtns>
+        <ListaComerciantes personajes={data} />
+      </>
+    );
+  }
+
+  return <p> No hay personajes</p>;
 };
 
 const Loader = styled.div`
@@ -111,8 +143,32 @@ const ContenedorSvg = styled.div`
 `;
 
 const Titulo = styled.div`
-  margin-top:2rem;
-  padding:0;
-  box-shadow: 0px 1.25rem 2.5rem rgba(0,0,0,.05);
+  margin-top: 2rem;
+  padding: 0;
+  box-shadow: 0px 1.25rem 2.5rem rgba(0, 0, 0, 0.05);
+`;
+
+const ContenedorBtns = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  color: #fff;
+`;
+
+const Btn = styled.button`
+  width: 6.6rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 3px;
+  background-color: ${(props) => (props.Rojo ? "red" : "blue")};
+  color: #fff;
+  border-radius: 0.5rem;
 `;
 export default Home;

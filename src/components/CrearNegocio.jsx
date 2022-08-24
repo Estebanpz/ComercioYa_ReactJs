@@ -12,6 +12,16 @@ import { FiUploadCloud } from "react-icons/fi";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import swal from "sweetalert";
+// Importando los elementos del formulario
+import {
+  Contenedor,
+  ContenedorFormulario,
+  ContenedorSvg,
+  ContenedorBtns,
+  ContenedorInputs,
+  Btn,
+  Input,
+} from "./../elementos/ElementosFormulario";
 const CrearNegocio = ({ negocio }) => {
   // Obteniendo el usuario actual
   const { user } = useAuth();
@@ -33,23 +43,24 @@ const CrearNegocio = ({ negocio }) => {
     forma_de_pago: "Efectivo",
   });
 
+  // Estado para el file imagen
+  const [imagen, setImagen] = useState("");
   useEffect(() => {
-      if (negocio) {
-        setEditanto(true);
-        setDatos({
-          ...datos,
-          nombre: negocio.nombre,
-          descripcion: negocio.descripcion,
-          ciudad: negocio.ciudad,
-          direccion: negocio.direccion,
-          telefono: negocio.telefono,
-          forma_de_pago: negocio.forma_de_pago,
-        });
+    if (negocio) {
+      setEditanto(true);
+      setDatos({
+        ...datos,
+        nombre: negocio.nombre,
+        descripcion: negocio.descripcion,
+        ciudad: negocio.ciudad,
+        direccion: negocio.direccion,
+        telefono: negocio.telefono,
+        forma_de_pago: negocio.forma_de_pago,
+      });
 
-        cambiarStateCategorias(negocio.categorias);
-        cambiarStateProductos(negocio.productos);
-      }
-  
+      cambiarStateCategorias(negocio.categorias);
+      cambiarStateProductos(negocio.productos);
+    }
 
     return () => {
       unSubscribe();
@@ -225,16 +236,18 @@ const CrearNegocio = ({ negocio }) => {
           categorias: stateCategorias,
           userId: user.uid,
         });
-        if (actualizarNegocio(negocio.id, {
-          nombre: datos.nombre,
-          ciudad: datos.ciudad,
-          telefono: datos.telefono,
-          direccion: datos.direccion,
-          descripcion: datos.descripcion,
-          productos: stateProductos,
-          categorias: stateCategorias,
-          userId: user.uid,
-        })) {
+        if (
+          actualizarNegocio(negocio.id, {
+            nombre: datos.nombre,
+            ciudad: datos.ciudad,
+            telefono: datos.telefono,
+            direccion: datos.direccion,
+            descripcion: datos.descripcion,
+            productos: stateProductos,
+            categorias: stateCategorias,
+            userId: user.uid,
+          })
+        ) {
           swal("Modificación", "Actualizacion realizada", "success");
           setEditanto(!editanto);
         }
@@ -246,18 +259,84 @@ const CrearNegocio = ({ negocio }) => {
     }
   };
 
+  //Validacion de tipo de imagen en el Input
+  const fileTypes = [
+    "image/apng",
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/webp",
+    "image/x-icon",
+  ];
+
+  function validFileType(file) {
+    return fileTypes.includes(file.type);
+  }
+
+  // Convertidor de tamaño de archivos
+  function returnFileSize(number) {
+    if (number < 1024) {
+      return `${number} bytes`;
+    } else if (number >= 1024 && number < 1048576) {
+      return `${(number / 1024).toFixed(1)} KB`;
+    } else if (number >= 1048576) {
+      return `${(number / 1048576).toFixed(1)} MB`;
+    }
+  }
+  // Selecciono el preview contenedor
+  const preview = document.querySelector(".preview");
+  //Manejador del input files
+  const handleInputFile = async (e) => {
+    while (preview.firstChild) {
+      preview.removeChild(preview.firstChild);
+    }
+
+    const curFiles = e.target.files;
+    console.log(curFiles);
+    if (curFiles === 0) {
+      const p = document.createElement("p");
+      p.textContent = "No hay imagen seleccionada";
+      preview.append(p);
+    } else {
+      const list = document.createElement("ol");
+      preview.appendChild(list);
+
+      for (const file of curFiles) {
+        const listItem = document.createElement("li");
+        const p = document.createElement("p");
+
+        if (validFileType(file)) {
+          p.textContent = `File name ${file.name} , file size ${returnFileSize(
+            file.size
+          )}.`;
+          const image = document.createElement("img");
+          image.src = URL.createObjectURL(file);
+          image.style.width = "200px";
+          image.style.height = "200px";
+          image.style.borderRadius = "50%";
+          image.style.cursor = "pointer";
+          listItem.appendChild(image);
+          listItem.appendChild(p);
+        } else {
+          p.textContent = `File name ${file.name}: Not a valid file type.`;
+          listItem.appendChild(p);
+        }
+
+        list.appendChild(listItem);
+      }
+    }
+  };
   return (
-    <>
-      <form className="row" onSubmit={handleSubmit}>
-        <div className="col-sm-6 col-md-6 col lg-6 col-xl-6">
-          <ContenedorSvg>
-            <IconoCrearNegocio />
-          </ContenedorSvg>
-        </div>
-        <div className="col-sm-6 col-md-6 col lg-6 col-xl-6 justify-content-center">
-          <Titulo>{editanto ? "TU NEGOCIO" : "REGISTRA TU NEGOCIO"}</Titulo>
-          <ContenedorFomulario>
-            <div className="form-group">
+    <Contenedor full blanco formulario>
+      <Titulo>
+        {editanto && negocio ? "TU NEGOCIO" : "REGISTRA TU NEGOCIO"}
+      </Titulo>
+      <ContenedorFormulario formulario>
+        <form>
+          <div>
+            <ContenedorInputs>
               <Label htmlFor="nombre">Nombre de mi negocio</Label>
               <Input
                 name="nombre"
@@ -267,9 +346,7 @@ const CrearNegocio = ({ negocio }) => {
                 value={datos.nombre || ""}
                 onChange={(e) => handleDatos(e)}
               />
-            </div>
 
-            <div className="form-group">
               <Label htmlFor="ciudad">Ciudad</Label>
               <Input
                 type="text"
@@ -279,9 +356,7 @@ const CrearNegocio = ({ negocio }) => {
                 value={datos.ciudad || ""}
                 onChange={(e) => handleDatos(e)}
               />
-            </div>
 
-            <div className="form-group">
               <Label htmlFor="direccion">Dirección</Label>
               <Input
                 type="text"
@@ -291,9 +366,7 @@ const CrearNegocio = ({ negocio }) => {
                 value={datos.direccion || ""}
                 onChange={(e) => handleDatos(e)}
               />
-            </div>
 
-            <div className="form-group">
               <Label htmlFor="telefono">Contacto</Label>
               <Input
                 type="tel"
@@ -303,21 +376,21 @@ const CrearNegocio = ({ negocio }) => {
                 value={datos.telefono || ""}
                 onChange={(e) => handleDatos(e)}
               />
-            </div>
-          </ContenedorFomulario>
-        </div>
+            </ContenedorInputs>
+          </div>
 
-        <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 mt-5">
-          <ContenedorFomulario>
-            <Subtitulo>Productos</Subtitulo>
+          <div>
             <ContenedorProductos id="contenedorProductos">
+              <Label>Productos</Label>
+
               <Input
                 type="text"
                 name="producto"
-                value={datos.producto || ''}
+                value={datos.producto || ""}
                 autoComplete="on"
                 onChange={(e) => handleDatos(e)}
               />
+
               <BsPlusCircleDotted
                 as="input"
                 type="button"
@@ -343,19 +416,11 @@ const CrearNegocio = ({ negocio }) => {
                   );
                 })}
             </ContenedorProductos>
-          </ContenedorFomulario>
-        </div>
-
-        <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 mt-5">
-          <ContenedorSvg>
-            <IconoCrearNegocio2 />
-          </ContenedorSvg>
-        </div>
-
-        <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 mt-5">
-          <ContenedorFomulario>
-            <Subtitulo>Categorias</Subtitulo>
+          </div>
+          <div>
             <ContenedorProductos>
+              <Label>Categorias</Label>
+
               <Input
                 type="text"
                 name="categoria"
@@ -363,6 +428,7 @@ const CrearNegocio = ({ negocio }) => {
                 autoComplete="on"
                 onChange={(e) => handleDatos(e)}
               />
+
               <BsPlusCircleDotted
                 as="input"
                 type="button"
@@ -388,25 +454,32 @@ const CrearNegocio = ({ negocio }) => {
                   );
                 })}
             </ContenedorProductos>
-          </ContenedorFomulario>
-          <button className="btn btn-success btn-block">
+          </div>
+        </form>
+        <ContenedorBtns>
+          <Btn onClick={(e) => handleSubmit(e)}>
             <span>
               <FiUploadCloud />
             </span>
             {editanto ? "Actualizar" : "Guardar"}
-          </button>
+          </Btn>
+        </ContenedorBtns>
+        <div>
+          <Input
+            type="file"
+            name="imagen"
+            accept=".jpeg,.png,.svg"
+            onChange={handleInputFile}
+          />
         </div>
-
-        <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 mt-5">
-          <ContenedorSvg>
-            <IconoCrearNegocio3 />
-          </ContenedorSvg>
+        <div className="preview">
+          <p>No hay archivo que se halla seleccionado aún.</p>
         </div>
-      </form>
-    </>
+      </ContenedorFormulario>
+    </Contenedor>
   );
 };
-const ContenedorSvg = styled.div`
+/*const ContenedorSvg = styled.div`
   width: 100%;
   height: auto;
   justify-content: center;
@@ -420,9 +493,9 @@ const ContenedorSvg = styled.div`
     padding: 0;
     margin: 0;
   }
-`;
+`;*
 
-const ContenedorFomulario = styled.div`
+/*const ContenedorFomulario = styled.div`
   margin: 3rem 1rem;
   text-align: center;
   box-shadow: 6px 10px 3px 5px rgba(0, 0, 0, 0.2);
@@ -441,7 +514,7 @@ const ContenedorFomulario = styled.div`
     hsl(215deg 19% 88%) 89%,
     hsl(0deg 0% 90%) 100%
   );
-`;
+`;*/
 
 const ContenedorProductos = styled.div`
   width: 100%;
@@ -452,33 +525,10 @@ const ContenedorProductos = styled.div`
     font-size: 1.6rem;
     color: #000;
   }
-
-  & > input {
-    font-size: 1.5rem; /* 40px */
-    text-transform: uppercase;
-    text-align: center;
-    border: none;
-    border-bottom: 2px solid #1e92e0;
-    outline: none;
-    width: 77%;
-    border-radius: 5px;
-
-    @media (min-width: 990px) {
-      font-size: 1.1rem;
-    }
-
-    @media (min-width: 960px) {
-      font-size: 0.8rem;
-    }
-
-    @media (max-width: 767px) {
-      font-size: 0.5rem;
-    }
-  }
 `;
 
-const Input = styled.input`
-  font-size: 1.5rem; /* 40px */
+/*const Input = styled.input`
+  font-size: 1.5rem; /* 40px
   text-transform: uppercase;
   text-align: center;
   border: none;
@@ -488,10 +538,10 @@ const Input = styled.input`
   border-radius: 5px;
 
   @media (max-width: 60rem) {
-    /* 950px */
-    font-size: 1rem; /* 24px */
+    /* 950px 
+    font-size: 1rem 24px
   }
-`;
+`;*/
 
 const Titulo = styled.h1`
   font-weight: normal;

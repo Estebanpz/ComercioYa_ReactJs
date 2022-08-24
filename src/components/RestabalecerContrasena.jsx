@@ -5,7 +5,15 @@ import RestablecerPassword from "../Firebase/RestablecerPassword";
 import swal from "sweetalert";
 //Importando SVG de password
 import { ReactComponent as Password } from "../img/password.svg";
-import styled from "styled-components";
+import {
+  Contenedor,
+  ContenedorFormulario,
+  ContenedorInputs,
+  ContenedorSvg,
+  ContenedorBtns,
+  Btn,
+  Input,
+} from "./../elementos/ElementosFormulario";
 const RestablecerContrasena = () => {
   const [email, setEmail] = useState("");
   // handleChange
@@ -45,64 +53,36 @@ const RestablecerContrasena = () => {
     }
   };
   return (
-    <>
-      <div className="row w-100">
-        <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2">
-          <Titulo>
-            <h1>Restablecer Contraseña</h1>
-          </Titulo>
-          <ContenedorSvg>
-            <Password />
-          </ContenedorSvg>
-        </div>
+    <Contenedor>
+      <strong>
+        <h1 style={{ color: "whitesmoke" }}>Restablecer Contraseña</h1>
+      </strong>
+      <ContenedorSvg>
+        <Password />
+      </ContenedorSvg>
 
-        <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 offset-sm-3 offset-md-3 offset-lg-3 offset-xl-3 mt-2">
-          <form onSubmit={(e) => handleSubmit(e)}>
-            <div className="form-group">
-              <input
-                type="email"
-                name="email"
-                placeholder="Correo Electronico"
-                className="form-control text-center"
-                value={email}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
+      <ContenedorFormulario>
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <ContenedorInputs>
+            <Input
+              type="email"
+              name="email"
+              placeholder="Correo Electronico"
+              className="form-control text-center"
+              value={email}
+              onChange={(e) => handleChange(e)}
+            />
+          </ContenedorInputs>
 
-            <div className="my-2">
-              <button type="submit" className="btn btn-primary btn-block">
-                Restablecer Contraseña
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </>
+          <ContenedorBtns>
+            <Btn type="submit">
+              Restablecer Contraseña
+            </Btn>
+          </ContenedorBtns>
+        </form>
+      </ContenedorFormulario>
+    </Contenedor>
   );
 };
 
-const ContenedorSvg = styled.div`
-  width: 100%;
-  height: auto;
-  justify-content: center;
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-
-  & > svg {
-    width: 40%;
-    height: auto;
-    padding: 0;
-    margin: 0;
-    border-radius: 10%;
-    box-shadow: 0px 1.25rem 2.5rem rgba(0, 0, 0, 0.4);
-  }
-`;
-
-const Titulo = styled.div`
-  margin-top: 2rem;
-  padding: 0;
-  box-shadow: 0px 1.25rem 2.5rem rgba(0, 0, 0, 0.05);
-  text-align: center;
-`;
 export default RestablecerContrasena;

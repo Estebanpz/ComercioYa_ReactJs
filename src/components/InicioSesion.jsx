@@ -4,8 +4,8 @@ import { useAuth } from "./../Context/AuthContext";
 import { ReactComponent as IconoLogin } from "../img/login.svg";
 //Importando la funcion de Inicio de Sesion
 import IniciarSesion from "../Firebase/IniciarSesion";
-import swal from "sweetalert";
 // Importando el sweet alert
+import swal from "sweetalert";
 //Importando iconos
 import { BsArrowClockwise, BsBoxArrowInRight } from "react-icons/bs";
 import styled from "styled-components";
@@ -24,7 +24,7 @@ const InicioSesion = () => {
       swal("Usuario", "El correo registrado no se ha verificado", "info");
       navigate("/inicio-sesion");
     }
-  }, [user,navigate]);
+  }, [user, navigate]);
 
   //Manejo de cambios en los inputs
   const handleChange = (e) => {
@@ -50,6 +50,7 @@ const InicioSesion = () => {
             password: "",
           });
           swal("Error", "contraseña incorrecta", "error");
+          document.getElementById("email").focus();
         }
 
         if (error.code === "auth/user-not-found") {
@@ -58,12 +59,9 @@ const InicioSesion = () => {
             email: "",
           });
           swal("Error", "usuario no registrado", "error");
+          document.getElementById("password").focus();
         }
         console.log(error);
-        setDatos({
-          email: "",
-          password: "",
-        });
       }
     } else {
       swal(
@@ -74,81 +72,156 @@ const InicioSesion = () => {
     }
   };
   return (
-    <>
-      <div className="row w-100">
-        <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-          <Titulo>
-            <h1>Inicia Sesión</h1>
-          </Titulo>
-          <ContenedorSvg>
-            <IconoLogin />
-          </ContenedorSvg>
-        </div>
+    <Contenedor>
+      <ContenedorSvg>
+        <IconoLogin />
+      </ContenedorSvg>
+      <ContenedorFormulario>
+        <form onSubmit={onSubmit}>
+          <ContenedorInputs>
+            <Input
+              type="email"
+              name="email"
+              placeholder="CORREO@CORREO.COM"
+              value={datos.email}
+              autoFocus
+              onChange={(e) => handleChange(e)}
+              id="email"
+            />
 
-        <div className="col-md-6 col-sm-6 col-lg-6 col-xl-6 offset-sm-3 offset-md-3 offset-lg-3 offset-xl-3 mt-2">
-          {/* Formulario de Inicio de Sesion */}
-          <form onSubmit={onSubmit}>
-            <div className="form-group">
-              <input
-                type="email"
-                name="email"
-                placeholder="CORREO@CORREO.COM"
-                className="form-control text-center"
-                value={datos.email}
-                autoFocus
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
+            <Input
+              type="password"
+              name="password"
+              placeholder="CONTRASEÑA"
+              value={datos.password}
+              onChange={(e) => handleChange(e)}
+              autoComplete="true"
+              id="password"
+            />
+          </ContenedorInputs>
 
-            <div className="form-group">
-              <input
-                type="password"
-                name="password"
-                placeholder="CONTRASEÑA"
-                className="form-control text-center"
-                value={datos.password}
-                onChange={(e) => handleChange(e)}
-                autoComplete="true"
-              />
-            </div>
-            <div className="my-1 justify-content-center aling-items-center">
-              <button className="btn btn-success btn-block justify-content-center">
-                <span className="aling-items-center justify-content-center">
-                  <BsBoxArrowInRight className="mx-2" fontSize="1.5rem" />
-                </span>
-                Iniciar Sesión
-              </button>
-            </div>
-            <NavLink
-              to="/restablecer-contrasena"
-              className="d-flex aling-items-center justify-content-center"
-            >
-              <span className="mx-1">
-                <BsArrowClockwise fontSize="1.5rem" />
+          <ContenedorBtns>
+            <Btn>
+              <span>
+                <BsBoxArrowInRight fontSize="1.5rem" />
               </span>
-              Restablecer Contraseña
-            </NavLink>
-          </form>
-        </div>
-      </div>
-    </>
+              Iniciar Sesión
+            </Btn>
+          </ContenedorBtns>
+          <NavLink to="/restablecer-contrasena" style={{ color: "#fff" }}>
+            <span>
+              <BsArrowClockwise fontSize="1.5rem" />
+            </span>
+            Restablecer Contraseña
+          </NavLink>
+        </form>
+      </ContenedorFormulario>
+    </Contenedor>
   );
 };
+
+const Contenedor = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  background-color: #000000;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`;
+
+const ContenedorFormulario = styled.div`
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  > form {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+const ContenedorInputs = styled.div`
+  width: 100%;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+  background-color: none;
+`;
+const Input = styled.input`
+  width: 25rem;
+  height: auto;
+  display: block;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background-color: transparent;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border-radius: 0.1rem;
+  color: #fca311;
+  margin: 1rem;
+  padding: 0.4rem;
+  &::placeholder {
+    color: rgba(rgb(255, 255, 255));
+  }
+
+  &:hover {
+    transition: all ease-in-out 0.5s;
+    border-bottom: 2px solid #fba410;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition-delay: 9999s;
+  }
+`;
 
 const ContenedorSvg = styled.div`
   width: 100%;
   height: auto;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 0.1rem;
+  margin-bottom: 1rem;
   display: flex;
   justify-content: center;
-
+  align-items: center;
   & > svg {
     width: 40%;
     height: auto;
     padding: 0;
     margin: 0;
   }
+`;
+
+const ContenedorBtns = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+`;
+
+const Btn = styled.button`
+  width: auto;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 3px;
+  background-color: #fca311;
+  color: #fff;
+  border-radius: 0.5rem;
 `;
 
 const Titulo = styled.div`

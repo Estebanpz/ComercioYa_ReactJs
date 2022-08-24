@@ -65,7 +65,7 @@ const useFormValidacion = () => {
                         ...error,
                         contrasena: "La contraseña debe tener al menos 6 caracteres. Valido solo letras y numeros."
                     });
-                } else if (value.length >= 8) {
+                } else if (value.length > 9) {
                     setValido(false);
                     setError({
                         ...error,
