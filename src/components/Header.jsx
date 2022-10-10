@@ -24,82 +24,112 @@ const Header = () => {
   };
   return (
     <Navegacion>
-      <Menu>
-        <ul>
-          <ContenedorLista>
-            <li>
-              <Link to="/">Comercio Ya</Link>
-            </li>
-            <li>
-              {user ? (
-                <Link to={`/negocio/${user.uid}`}>Mi Negocio</Link>
-              ) : (
-                <Link to="/inicio-sesion">Iniciar Sesion</Link>
-              )}
-            </li>
-            <li>
-              {user ? (
-                <Link to="/" onClick={() => handleSignOut()}>
-                  Salir
+      <nav className="navbar navbar-expand-sm mb-2">
+        <div className="container">
+          <Link className="navbar-brand" to="#">
+            Comercio Ya
+          </Link>
+
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to="/">
+                  <span>
+                    <BsHouse className="m-1" />
+                    Comercio Ya
+                  </span>
                 </Link>
-              ) : (
-                <Link to="/crear-cuenta">Registrate</Link>
-              )}
-            </li>
-          </ContenedorLista>
-        </ul>
-      </Menu>
+              </li>
+              <li className="nav-item">
+                {user ? (
+                  <Link to={`/negocio/${user.uid}`}>
+                    <span>
+                      <BsShop className="m-1" />
+                      Mi Negocio
+                    </span>
+                  </Link>
+                ) : (
+                  <Link to="/inicio-sesion">
+                    <span>
+                      <BsDoorOpen />
+                      Iniciar Sesion
+                    </span>
+                  </Link>
+                )}
+              </li>
+              <li className="nav-item">
+                {user ? (
+                  <Link to="/" onClick={() => handleSignOut()}>
+                    <span>
+                      <BsFillDoorClosedFill />
+                      Salir
+                    </span>
+                  </Link>
+                ) : (
+                  <Link to="/crear-cuenta">
+                    <span>
+                      <BsPersonPlus />
+                      Registrate
+                    </span>
+                  </Link>
+                )}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      {/*<section className="texto-header">
+        <h1>COMERCIO YA</h1>
+                </section>*/}
     </Navegacion>
   );
 };
 
 const Navegacion = styled.header`
-  background-color: #000;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-`;
-
-const Menu = styled.nav`
   width: 100%;
-  height: 100%;
-  padding: 1rem;
+  height: 3.6rem;
+  background: #36d1dc; /* fallback for old browsers */
 
-  & > ul {
-    list-style: none;
-  }
-`;
-
-const ContenedorLista = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  column-gap: 0.3em;
-
-  & > li {
-    display: inline-block !important;
-    cursor: pointer;
-    padding: 5px 15px;
-    border-radius: 3px;
+  & > .texto-header {
+    display: flex;
+    height: 400px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
     text-align: center;
 
-    &>li:hover {
-      background-color: #456f24;
-    }
-
-    & > a {
-      text-decoration: none;
-      color: #fff !important;
+    > h1 {
+      font-size: 30px;
+      color: #ffffff;
+      font-weight: bold;
     }
   }
 
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-    column-gap:.1em;
+  /* COLOR DE NAVEGACIÓN*/
+  & > .navbar {
+    background-color: #4895ef !important;
+    color: blanchedalmond !important;
   }
 
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(1, 1fr);
-    column-gap:.1em;
+  & > .navbar .navbar-brand {
+    color: whitesmoke !important;
+  }
+
+  & > .navbar .navbar-nav > li {
+    margin-right: 1rem;
   }
 `;
 
@@ -107,10 +137,12 @@ const Link = styled(NavLink)`
   text-decoration: none;
   font-size: 1.3rem;
   cursor: pointer;
+  color: whitesmoke !important;
+  font-size: 100%;
 
-  &:hover{
-    transition: all ease 0.5s;
-    border-bottom: 1px solid #ccc;
+  & > span > svg {
+    height: 1.5rem;
+    width: 2rem;
   }
 `;
 export default Header;

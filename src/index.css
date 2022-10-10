@@ -17,10 +17,3 @@ body {
   width: 100%;
   font-family: 'Open Sans', sans-serif;
 }
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
