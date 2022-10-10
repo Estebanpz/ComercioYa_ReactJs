@@ -4,33 +4,21 @@ import actualizarNegocio from "../Firebase/ActualizarNegocio";
 import useObtenerNegocios from "./../Hooks/useObtenerNegocios";
 // Importando el UseAuth para poder obtener el usuario actual
 import { useAuth } from "../Context/AuthContext";
-import { ReactComponent as IconoCrearNegocio } from "./../img/crear-negocio.svg";
-import { ReactComponent as IconoCrearNegocio2 } from "./../img/crear-negocio-2.svg";
-import { ReactComponent as IconoCrearNegocio3 } from "./../img/crear-negocio-3.svg";
+import SubirImagen from "./../Firebase/SubirImagen";
+import DescargarImagen from "../Firebase/DescargarImagen";
 import { BsPlusCircleDotted, BsXLg } from "react-icons/bs";
 import { FiUploadCloud } from "react-icons/fi";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import swal from "sweetalert";
-// Importando los elementos del formulario
-import {
-  Contenedor,
-  ContenedorFormulario,
-  ContenedorSvg,
-  ContenedorBtns,
-  ContenedorInputs,
-  Btn,
-  Input,
-} from "./../elementos/ElementosFormulario";
 const CrearNegocio = ({ negocio }) => {
   // Obteniendo el usuario actual
   const { user } = useAuth();
-  const [errorProducto, setErrorProducto] = useState(true);
-  const [errorCategoria, setErrorCategoria] = useState(true);
   const [stateProductos, cambiarStateProductos] = useState([]);
   const [stateCategorias, cambiarStateCategorias] = useState([]);
   const [editanto, setEditanto] = useState(false);
   const [negocios, unSubscribe] = useObtenerNegocios();
+  const [mensaje, setMensaje] = useState("");
   //Estado para los datos del negocio
   const [datos, setDatos] = useState({
     producto: "",
@@ -40,11 +28,13 @@ const CrearNegocio = ({ negocio }) => {
     ciudad: "",
     direccion: "",
     telefono: "",
+    imagen: "",
     forma_de_pago: "Efectivo",
   });
-
+  const [urlImagen, setUrlImagen] = useState("");
   // Estado para el file imagen
-  const [imagen, setImagen] = useState("");
+  const [imagen, setImagen] = useState(null);
+
   useEffect(() => {
     if (negocio) {
       setEditanto(true);
@@ -56,6 +46,7 @@ const CrearNegocio = ({ negocio }) => {
         direccion: negocio.direccion,
         telefono: negocio.telefono,
         forma_de_pago: negocio.forma_de_pago,
+        imagen: negocio.imagen,
       });
 
       cambiarStateCategorias(negocio.categorias);
@@ -68,117 +59,98 @@ const CrearNegocio = ({ negocio }) => {
   }, [user, negocio]);
 
   const handleDatos = (e) => {
-    //Nombre del Negocio
-    if (e.target.name === "nombre") {
-      const { value } = e.target;
-      setDatos({
-        ...datos,
-        nombre: value,
-      });
-    }
-    //Descripción del Negocio
+    switch (e.target.name) {
+      case "nombre":
+        setDatos({
+          ...datos,
+          [e.target.name]: e.target.value,
+        });
 
-    if (e.target.name === "descripcion") {
-      const { value } = e.target;
-      setDatos({
-        ...datos,
-        descripcion: value,
-      });
-    }
+        break;
+      case "ciudad":
+        setDatos({
+          ...datos,
+          [e.target.name]: e.target.value,
+        });
+        break;
+      case "direccion":
+        setDatos({
+          ...datos,
+          [e.target.name]: e.target.value,
+        });
+        break;
+      case "telefono":
+        setDatos({
+          ...datos,
+          [e.target.name]: e.target.value,
+        });
 
-    // Formas de Pago
-    if (e.target.name === "formas-pagos") {
-      const { value } = e.target;
-      setDatos({
-        ...datos,
-        forma_de_pago: value,
-      });
-    }
+        break;
 
-    // Ciudad del Negocio
-    if (e.target.name === "ciudad") {
-      const { value } = e.target;
-      setDatos({
-        ...datos,
-        ciudad: value,
-      });
-    }
+      case "producto":
+        setDatos({
+          ...datos,
+          [e.target.name]: e.target.value,
+        });
 
-    // Dirección del Negocio
-    if (e.target.name === "direccion") {
-      const { value } = e.target;
-      setDatos({
-        ...datos,
-        direccion: value,
-      });
-    }
+        break;
 
-    // Teléfono del Negocio
+      case "categoria":
+        setDatos({
+          ...datos,
+          [e.target.name]: e.target.value,
+        });
+        break;
 
-    if (e.target.name === "telefono") {
-      const { value } = e.target;
-      setDatos({
-        ...datos,
-        telefono: Number(value),
-      });
-    }
-
-    // Producto
-    if (e.target.name === "producto") {
-      const { value } = e.target;
-      setDatos({
-        ...datos,
-        producto: value,
-      });
-
-      if (value !== "" || value !== undefined) {
-        setErrorProducto(!errorProducto);
-      }
-    }
-
-    // Categoria
-    if (e.target.name === "categoria") {
-      const { value } = e.target;
-      setDatos({
-        ...datos,
-        categoria: value,
-      });
-      value.length >= 0
-        ? setErrorCategoria(!errorCategoria)
-        : setErrorCategoria(false);
+      default:
+        break;
     }
   };
 
   // Agregar Productos
   const agregarProductos = () => {
-    cambiarStateProductos([
-      ...stateProductos,
-      {
-        id: uuidv4(),
-        nombre: datos.producto,
-      },
-    ]);
+    let span = document.getElementById("span_producto");
+    if (datos.producto.length === 0) {
+      span.className = "text-dark text-center";
+      span.innerText = "No se puede agregar un producto vacio.";
+    } else {
+      span.innerText = "";
+      cambiarStateProductos([
+        ...stateProductos,
+        {
+          id: uuidv4(),
+          nombre: datos.producto,
+        },
+      ]);
 
-    setDatos({
-      producto: "",
-      ...datos,
-    });
+      setDatos({
+        ...datos,
+        producto: "",
+      });
+    }
   };
 
   //Agregar Categorias
   const agregarCategorias = () => {
-    cambiarStateCategorias([
-      ...stateCategorias,
-      {
-        id: uuidv4(),
-        nombre: datos.categoria,
-      },
-    ]);
+    let span = document.getElementById("span_categorias");
+    if (datos.categoria.length === 0) {
+      span.className = "text-dark";
+      span.innerText = "No se puede agregar una categoria vacia";
+    } else {
+      span.innerText = "";
+      cambiarStateCategorias([
+        ...stateCategorias,
+        {
+          id: uuidv4(),
+          nombre: datos.categoria,
+        },
+      ]);
 
-    setDatos({
-      categoria: "",
-      ...datos,
-    });
+      setDatos({
+        ...datos,
+        categoria: "",
+      });
+    }
   };
 
   // Quitar Productos
@@ -195,9 +167,47 @@ const CrearNegocio = ({ negocio }) => {
     );
   };
 
-  // Comprobando si ya existe ese documento para el comerciante
-  //const yaesta = negocios.some((negocio) =>  negocio?.userId === user.uid);
-  // Manejador del evento Submit del Formulario
+  // Manejar la subida de la Imagen y Obtener la URL
+
+  const handleImagen = async () => {
+    try {
+      if (validFileType(imagen)) {
+        await SubirImagen(imagen, user.uid);
+        swal("Correcto", "Haz cargado la imagen correctamente", "success");
+        const { res } = await DescargarImagen(user.uid);
+        setUrlImagen(res);
+        setDatos({
+          ...datos,
+          imagen: urlImagen,
+        });
+      } else {
+        swal("Error", "Solo se aceptan imagenes", "error");
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //VALIDACION DE TELEFONO
+  function validarTelefono(telefono) {
+    let exp = new RegExp(/^\S[0-9]{8,10}$/);
+    if (!exp.test(telefono)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // VALIDAR CAMPOS VACIOS
+  function validarCampoVacio(campo) {
+    if (campo.length === 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     delete datos.categoria;
@@ -208,51 +218,109 @@ const CrearNegocio = ({ negocio }) => {
         productos: stateProductos,
         categorias: stateCategorias,
         userId: user.uid,
+        imagen: urlImagen !== "" ? urlImagen : negocio.imagen,
         ...datos,
       });
-      if (!editanto) {
-        setTimeout(async () => {
-          await GuardarNegocio({
-            nombre: datos.nombre,
-            ciudad: datos.ciudad,
-            telefono: datos.telefono,
-            direccion: datos.direccion,
-            descripcion: datos.descripcion,
-            productos: stateProductos,
-            categorias: stateCategorias,
-            userId: user.uid,
-          });
-        }, 200);
-        swal("Completado", "Negocio Registrado", "success");
-        setEditanto(!editanto);
-      } else if (editanto) {
-        setDatos({
-          nombre: datos.nombre,
-          ciudad: datos.ciudad,
-          telefono: datos.telefono,
-          direccion: datos.direccion,
-          descripcion: datos.descripcion,
-          productos: stateProductos,
-          categorias: stateCategorias,
-          userId: user.uid,
-        });
-        if (
-          actualizarNegocio(negocio.id, {
-            nombre: datos.nombre,
-            ciudad: datos.ciudad,
-            telefono: datos.telefono,
-            direccion: datos.direccion,
-            descripcion: datos.descripcion,
-            productos: stateProductos,
-            categorias: stateCategorias,
-            userId: user.uid,
-          })
-        ) {
-          swal("Modificación", "Actualizacion realizada", "success");
-          setEditanto(!editanto);
-        }
 
-        console.log(datos);
+      if (!validarCampoVacio(datos.nombre)) {
+        setMensaje("Por favor ingrese el nombre de su negocio.");
+        return;
+      }
+
+      if (!validarTelefono(datos.telefono)) {
+        setMensaje(
+          "Por favor ingrese un número de telefono válido, mínimo 8 dígitos y máximo 10."
+        );
+        return;
+      }
+
+      if (!validarCampoVacio(datos.ciudad)) {
+        setMensaje(
+          "Por favor ingrese una ciudad, no se aceptan campos vacios."
+        );
+        return;
+      }
+
+      if (!validarCampoVacio(datos.direccion)) {
+        setMensaje("Por favor ingrese una direccion.");
+        return;
+      }
+
+      if (datos.imagen === "") {
+        setDatos({
+          ...datos,
+          imagen: negocio.imagen,
+        });
+      }
+
+      console.log(datos);
+
+      if (
+        validarCampoVacio(datos.nombre) &&
+        validarTelefono(datos.telefono) &&
+        validarCampoVacio(datos.ciudad) &&
+        validarCampoVacio(datos.direccion)
+      ) {
+        if (!editanto) {
+          setTimeout(async () => {
+            await GuardarNegocio({
+              nombre: datos.nombre.toUpperCase(),
+              ciudad: datos.ciudad.toUpperCase(),
+              telefono: Number(datos.telefono),
+              direccion: datos.direccion.toUpperCase(),
+              descripcion: datos.descripcion.toUpperCase(),
+              productos: stateProductos,
+              categorias: stateCategorias,
+              userId: user.uid,
+              imagen: urlImagen,
+            });
+          }, 200);
+          swal("Completado", "Negocio Registrado", "success");
+          setEditanto(!editanto);
+        } else if (editanto) {
+          if (!imagen) {
+            let { res } = DescargarImagen(user.uid);
+            console.log(res);
+          } else {
+            setDatos({
+              nombre: datos.nombre.toUpperCase(),
+              ciudad: datos.ciudad.toUpperCase(),
+              telefono: Number(datos.telefono),
+              direccion: datos.direccion.toUpperCase(),
+              descripcion: datos.descripcion.toUpperCase(),
+              productos: stateProductos,
+              categorias: stateCategorias,
+              userId: user.uid,
+              imagen: negocio.imagen,
+            });
+          }
+
+          if (
+            actualizarNegocio(negocio.id, {
+              nombre: datos.nombre.toUpperCase(),
+              ciudad: datos.ciudad.toUpperCase(),
+              telefono: Number(datos.telefono),
+              direccion: datos.direccion.toUpperCase(),
+              descripcion: datos.descripcion.toUpperCase(),
+              productos: stateProductos,
+              categorias: stateCategorias,
+              userId: user.uid,
+              imagen: urlImagen,
+            })
+          ) {
+            swal("Modificación", "Actualizacion realizada", "success");
+            console.log(datos);
+            setEditanto(!editanto);
+          }
+
+          console.log(datos);
+        }
+      } else {
+        swal(
+          "Registro erroneo",
+          "Por favor verifique que sus datos suministrados sean los esperados.",
+          "error"
+        );
       }
     } catch (error) {
       console.log(error);
@@ -300,183 +368,287 @@ const CrearNegocio = ({ negocio }) => {
       p.textContent = "No hay imagen seleccionada";
       preview.append(p);
     } else {
-      const list = document.createElement("ol");
-      preview.appendChild(list);
+      const contenedor = document.createElement("div");
+      contenedor.className = "figure";
+      preview.appendChild(contenedor);
 
       for (const file of curFiles) {
-        const listItem = document.createElement("li");
         const p = document.createElement("p");
 
         if (validFileType(file)) {
           p.textContent = `File name ${file.name} , file size ${returnFileSize(
             file.size
           )}.`;
+          setImagen(file);
           const image = document.createElement("img");
           image.src = URL.createObjectURL(file);
-          image.style.width = "200px";
-          image.style.height = "200px";
-          image.style.borderRadius = "50%";
-          image.style.cursor = "pointer";
-          listItem.appendChild(image);
-          listItem.appendChild(p);
-        } else {
+          image.style.maxWidth = "18rem";
+          image.style.maxHeight = "18rem";
+          contenedor.append(image);
+          preview.appendChild(p);
+        } else if (!validFileType(file)) {
+          p.className = "text-danger";
           p.textContent = `File name ${file.name}: Not a valid file type.`;
-          listItem.appendChild(p);
+          contenedor.appendChild(p);
+          return;
+        } else if (!file) {
+          setDatos({
+            ...datos,
+            imagen: urlImagen !== "" ? urlImagen : negocio.imagen,
+          });
         }
 
-        list.appendChild(listItem);
+        //list.appendChild(list);
       }
     }
   };
   return (
-    <Contenedor full blanco formulario>
+    <div className="container-fluid bg-light text-dark">
       <Titulo>
         {editanto && negocio ? "TU NEGOCIO" : "REGISTRA TU NEGOCIO"}
       </Titulo>
-      <ContenedorFormulario formulario>
-        <form>
-          <div>
-            <ContenedorInputs>
-              <Label htmlFor="nombre">Nombre de mi negocio</Label>
-              <Input
-                name="nombre"
-                type="text"
-                id="nombre"
-                autoComplete="on"
-                value={datos.nombre || ""}
-                onChange={(e) => handleDatos(e)}
-              />
+      <form>
+        <p>{mensaje}</p>
+        <div className="row p-4">
+          <div
+            className="col-sm-3 col-md-3 col-xl-4 col-lg-4 card text-white p-2 mb-2"
+            style={{ backgroundColor: "#ccc" }}
+          >
+            <div className="card-header text-center">
+              <h2 className="card-title">Contacto</h2>
+            </div>
 
-              <Label htmlFor="ciudad">Ciudad</Label>
-              <Input
-                type="text"
-                name="ciudad"
-                id="ciudad"
-                autoComplete="on"
-                value={datos.ciudad || ""}
-                onChange={(e) => handleDatos(e)}
-              />
+            <div className="card-body">
+              <div className="form-group row">
+                <label htmlFor="nombre" className="col-sm-4">
+                  Nombre de mi negocio
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    name="nombre"
+                    type="text"
+                    id="nombre"
+                    className="form-control"
+                    value={datos.nombre || ""}
+                    onChange={(e) => handleDatos(e)}
+                  />
+                </div>
+              </div>
 
-              <Label htmlFor="direccion">Dirección</Label>
-              <Input
-                type="text"
-                name="direccion"
-                id="direccion"
-                autoComplete="on"
-                value={datos.direccion || ""}
-                onChange={(e) => handleDatos(e)}
-              />
-
-              <Label htmlFor="telefono">Contacto</Label>
-              <Input
-                type="tel"
-                name="telefono"
-                id="telefono"
-                autoComplete="on"
-                value={datos.telefono || ""}
-                onChange={(e) => handleDatos(e)}
-              />
-            </ContenedorInputs>
+              <div className="form-group row">
+                <label htmlFor="ciudad" className="col-sm-4 ">
+                  Ciudad
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    name="ciudad"
+                    id="ciudad"
+                    className="form-control"
+                    autoComplete="on"
+                    value={datos.ciudad || ""}
+                    onChange={(e) => handleDatos(e)}
+                  />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="direccion" className="col-sm-4 ">
+                  Dirección
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    name="direccion"
+                    id="direccion"
+                    autoComplete="on"
+                    className="form-control"
+                    value={datos.direccion || ""}
+                    onChange={(e) => handleDatos(e)}
+                  />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="telefono" className="col-sm-4 ">
+                  Contacto
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="tel"
+                    name="telefono"
+                    id="telefono"
+                    autoComplete="on"
+                    className="form-control"
+                    value={datos.telefono || ""}
+                    onChange={(e) => handleDatos(e)}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <ContenedorProductos id="contenedorProductos">
-              <Label>Productos</Label>
+          <div className="col-sm-3 col-md-3 col-lg-4 col-xl-4 card bg-info p-2 mb-2">
+            <div className="card-header">
+              {/* PRODUCTOS*/}
+              <h2 className="card-title text-center text-white">Productos</h2>
+            </div>
+            <ContenedorProductos
+              id="contenedorProductos"
+              className="form-group row"
+            >
+              <div className="col-sm-9 mt-3 d-inline">
+                <div className="text-center">
+                  <span id="span_producto"></span>
+                </div>
+                <input
+                  type="text"
+                  name="producto"
+                  value={datos.producto || ""}
+                  autoComplete="on"
+                  className="form-control ml-2"
+                  onChange={(e) => handleDatos(e)}
+                />
+              </div>
 
-              <Input
-                type="text"
-                name="producto"
-                value={datos.producto || ""}
-                autoComplete="on"
-                onChange={(e) => handleDatos(e)}
-              />
+              <div className="col-sm-3 mt-3 d-inline">
+                <BsPlusCircleDotted
+                  as="input"
+                  type="button"
+                  onClick={() => agregarProductos()}
+                  color="#0c1ae9"
+                  size="1.6rem"
+                />
+              </div>
 
-              <BsPlusCircleDotted
-                as="input"
-                type="button"
-                onClick={() => agregarProductos()}
-                color="#0c1ae9"
-                size="1.6rem"
-                className="ml-1"
-              />
-
-              {stateProductos.length > 0 &&
-                stateProductos.map((product) => {
-                  return (
-                    <ElementoLista key={product.id}>
-                      <span>{product.nombre}</span>
-                      <BsXLg
-                        as="input"
-                        type="button"
-                        onClick={() => eliminarProducto(product.id)}
-                        color="#e41a24"
-                        size="1rem"
-                      />
-                    </ElementoLista>
-                  );
-                })}
+              <ul className="list-group card-body">
+                {stateProductos.length > 0 &&
+                  stateProductos.map((product) => {
+                    return (
+                      <div className="form-group row mx-2" key={product.id}>
+                        <div className="col-sm-10">
+                          <li className="list-group-item rounded">
+                            {product.nombre}
+                          </li>
+                        </div>
+                        <div className="col-sm-2">
+                          <BsXLg
+                            as="input"
+                            type="button"
+                            onClick={() => eliminarProducto(product.id)}
+                            color="#e41a24"
+                            size="1rem"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </ul>
             </ContenedorProductos>
           </div>
-          <div>
-            <ContenedorProductos>
-              <Label>Categorias</Label>
 
-              <Input
-                type="text"
-                name="categoria"
-                value={datos.categoria || ""}
-                autoComplete="on"
-                onChange={(e) => handleDatos(e)}
-              />
+          <div className="col-sm-3 col-md-3 col-lg-4 col-xl-4 card bg-warning p-2 mb-2">
+            <div className="card-header">
+              <h2 className="card-title text-center text-white">Categorias</h2>
+            </div>
+            <ContenedorProductos className="form-group row">
+              <div className="col-sm-9 mt-3 d-inline">
+                <div className="text-center">
+                  <span id="span_categorias"></span>
+                </div>
+                <input
+                  type="text"
+                  name="categoria"
+                  value={datos.categoria || ""}
+                  autoComplete="on"
+                  className="form-control ml-2"
+                  onChange={(e) => handleDatos(e)}
+                />
+              </div>
 
-              <BsPlusCircleDotted
-                as="input"
-                type="button"
-                onClick={() => agregarCategorias()}
-                color="#0c1ae9"
-                size="1.6rem"
-                className="ml-1"
-              />
+              <div className="col-sm-3 mt-3 d-inline">
+                <BsPlusCircleDotted
+                  as="input"
+                  type="button"
+                  onClick={() => agregarCategorias()}
+                  color="#0c1ae9"
+                  size="1.6rem"
+                  className="ml-1"
+                />
+              </div>
 
-              {stateCategorias.length > 0 &&
-                stateCategorias.map((categoria) => {
-                  return (
-                    <ElementoLista key={categoria.id}>
-                      <span>{categoria.nombre}</span>
-                      <BsXLg
-                        as="input"
-                        type="button"
-                        onClick={() => eliminarCategoria(categoria.id)}
-                        color="#e41a24"
-                        size="1rem"
-                      />
-                    </ElementoLista>
-                  );
-                })}
+              <ul className="list-group card-body">
+                {stateCategorias.length > 0 &&
+                  stateCategorias.map((categoria) => {
+                    return (
+                      <div className="form-group row mx-2" key={categoria.id}>
+                        <div className="col-sm-10">
+                          <li className="list-group-item rounded">
+                            {categoria.nombre}
+                          </li>
+                        </div>
+                        <div className="col-sm-2">
+                          <BsXLg
+                            as="input"
+                            type="button"
+                            onClick={() => eliminarCategoria(categoria.id)}
+                            color="#e41a24"
+                            size="1rem"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </ul>
             </ContenedorProductos>
           </div>
-        </form>
-        <ContenedorBtns>
-          <Btn onClick={(e) => handleSubmit(e)}>
-            <span>
-              <FiUploadCloud />
-            </span>
-            {editanto ? "Actualizar" : "Guardar"}
-          </Btn>
-        </ContenedorBtns>
-        <div>
-          <Input
-            type="file"
-            name="imagen"
-            accept=".jpeg,.png,.svg"
-            onChange={handleInputFile}
-          />
+          <div className="col-sm-7 col-md-7 col-lg-7 col-xl-7 p-2 mr-2 text-white">
+            <input
+              type="file"
+              name="imagen"
+              accept=".jpeg,.png,.svg"
+              className="form-control"
+              src={urlImagen || ""}
+              onChange={handleInputFile}
+            />
+            <input
+              type="button"
+              value={datos.imagen ? "Actualizar Imagen" : "SubirImagen"}
+              className="btn text-white mt-2 btn-warning"
+              onClick={() => handleImagen()}
+            />
+
+            {datos.imagen && (
+              <Card>
+                <div>
+                  <img
+                    src={datos.imagen || DescargarImagen(user.uid)}
+                    alt={datos.descripcion}
+                    style={{ maxWidth: "18rem", maxHeight: "18rem" }}
+                  />
+                </div>
+              </Card>
+            )}
+
+            <Card className="preview text-dark">
+              <p>No hay archivo que se halla seleccionado aún.</p>
+            </Card>
+          </div>
+
+          <div className="col-sm-3 col-md-3 col-lg-3 col-xl-3 p-2 ml-5">
+            <div className="w-100">
+              <button
+                onClick={(e) => handleSubmit(e)}
+                className="btn btn-block btn-primary"
+              >
+                <span>
+                  <FiUploadCloud />
+                </span>
+                {editanto ? "Actualizar" : "Guardar"}
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="preview">
-          <p>No hay archivo que se halla seleccionado aún.</p>
-        </div>
-      </ContenedorFormulario>
-    </Contenedor>
+      </form>
+    </div>
   );
 };
 /*const ContenedorSvg = styled.div`
@@ -516,6 +688,75 @@ const CrearNegocio = ({ negocio }) => {
   );
 `;*/
 
+const Card = styled.div`
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  & > div > img {
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  @media (max-width: 960px) {
+    & > div {
+      > h3 {
+        font-size: 1.1rem;
+      }
+      > p {
+        font-size: 0.9rem;
+      }
+    }
+
+    & > div > img {
+      width: 7.6rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    & > div {
+      > p {
+        font-size: 1.2rem;
+      }
+    }
+
+    & > div > img {
+      width: 10rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    & > div {
+      > p {
+        font-size: 1rem;
+      }
+    }
+
+    & > div > img {
+      width: 8rem;
+    }
+  }
+
+  @media (max-width: 400px) {
+    & > div {
+      > p,
+      h3 {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-width: 280px) {
+    & > div {
+      display: none;
+    }
+
+    & > div > img {
+      width: 6rem;
+    }
+  }
+`;
+
 const ContenedorProductos = styled.div`
   width: 100%;
 
@@ -523,7 +764,7 @@ const ContenedorProductos = styled.div`
     cursor: pointer;
     margin-left: 0.5rem;
     font-size: 1.6rem;
-    color: #000;
+    color: #fff;
   }
 `;
 
@@ -551,6 +792,7 @@ const Titulo = styled.h1`
   box-shadow: 6px 10px 3px 5px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   cursor: pointer;
+  color: ${(props) => props.blanco && "#FFFF"};
   @media (max-width: 60rem) {
     /* 950px */
     font-size: 1.5rem; /* 32px */
@@ -582,7 +824,7 @@ const Label = styled.label`
   }
 `;
 
-const ElementoLista = styled.div`
+const ElementoLista = styled.ul`
   text-transform: uppercase;
   @media (max-width: 60rem) {
     /* 950px */

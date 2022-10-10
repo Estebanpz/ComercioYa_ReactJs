@@ -24,7 +24,7 @@ const ContenedorFormulario = styled.div`
     margin-top: 1.2rem;
     justify-content: center;
     align-items: center;
-
+    color: ${props => props.blanco && '#FFFF'};
     &> div{
       height: 100%;
     }
@@ -38,6 +38,9 @@ const ContenedorInputs = styled.div`
   justify-content: center;
   align-items: center;
   background-color: none;
+   &>label{
+    color: ${props => props.blanco && '#FFFF'};
+   }
 `;
 const Input = styled.input`
   width: 25rem;
@@ -55,7 +58,6 @@ const Input = styled.input`
   color: #fca311;
   margin: 1rem;
   padding: 0.4rem;
-  opacity: ${props => props.formulario && '0'};
   &::placeholder {
     color: rgba(rgb(255, 255, 255));
   }

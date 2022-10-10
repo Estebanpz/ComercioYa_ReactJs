@@ -27,12 +27,19 @@ const CrearCuenta = () => {
     let name = e.target.name;
     let value = e.target.value;
 
-    validacion(e, name, value);
+    if(validacion(e, name, value)){
+      setDatos({
+        ...datos,
+        [name]: value,
+      });
+    }else{
+      swal({
+        title:"error",
+        text: error?.name,
+        icon:"error",
+      });
+    }
 
-    setDatos({
-      ...datos,
-      [name]: value,
-    });
   }; //Fin del handleChange
 
   const onSubmit = async (e) => {

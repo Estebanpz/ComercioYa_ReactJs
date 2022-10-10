@@ -14,6 +14,7 @@ import { AuthProvider } from "./Context/AuthContext";
 //Importando Ruta Privada
 import RutaPrivada from './components/RutaPrivada';
 import styled from 'styled-components';
+import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <AuthProvider>
