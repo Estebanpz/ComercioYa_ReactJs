@@ -1,4 +1,4 @@
-import React from 'react';
+import { React } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //Importacion de componentes
 import Error404 from './components/Error404';
@@ -44,7 +44,7 @@ function App() {
             <Route path="*" element={<Error404 />} />
           </Routes>
         </Main>
-
+        
       </BrowserRouter>
     </AuthProvider>
   );
@@ -53,6 +53,5 @@ function App() {
 const Main = styled.main`
   width:100%;
   height:auto;
-  background-color:#000;
 `;
 export default App;

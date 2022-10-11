@@ -2,15 +2,8 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { signOut, auth } from "./../Firebase/firebaseConfig";
 //Iconos
-import {
-  BsDoorOpen,
-  BsPersonPlus,
-  BsHouse,
-  BsShop,
-  BsFillDoorClosedFill,
-} from "react-icons/bs";
-//Importando el boton de cerrar sesion
-
+import { BsShop, BsFillDoorClosedFill } from "react-icons/bs";
+import { FaHome, FaUserPlus, FaSignInAlt } from "react-icons/fa";
 // Importando la conexion a el contexto de User
 import { useAuth } from "../Context/AuthContext";
 import styled from "styled-components";
@@ -47,7 +40,7 @@ const Header = () => {
               <li className="nav-item">
                 <Link to="/">
                   <span>
-                    <BsHouse className="m-1" />
+                    <FaHome className="m-1" />
                     Comercio Ya
                   </span>
                 </Link>
@@ -63,7 +56,7 @@ const Header = () => {
                 ) : (
                   <Link to="/inicio-sesion">
                     <span>
-                      <BsDoorOpen />
+                      <FaSignInAlt />
                       Iniciar Sesion
                     </span>
                   </Link>
@@ -80,7 +73,7 @@ const Header = () => {
                 ) : (
                   <Link to="/crear-cuenta">
                     <span>
-                      <BsPersonPlus />
+                      <FaUserPlus />
                       Registrate
                     </span>
                   </Link>
@@ -101,22 +94,7 @@ const Header = () => {
 const Navegacion = styled.header`
   width: 100%;
   height: 3.6rem;
-  background: #36d1dc; /* fallback for old browsers */
-
-  & > .texto-header {
-    display: flex;
-    height: 400px;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-
-    > h1 {
-      font-size: 30px;
-      color: #ffffff;
-      font-weight: bold;
-    }
-  }
+  /* fallback for old browsers */
 
   /* COLOR DE NAVEGACIÓN*/
   & > .navbar {

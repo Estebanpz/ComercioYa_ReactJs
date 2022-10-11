@@ -18,7 +18,6 @@ const Lista = styled.section`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.2em;
-  background-color: #000;
   color: #fff;
 
  

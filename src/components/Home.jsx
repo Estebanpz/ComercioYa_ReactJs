@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useObtenerNegocios from "../Hooks/useObtenerNegocios";
 import ListaComerciantes from "./ListaComerciantes";
-
+import Footer from "./Footer";
+import Servicios from "./Servicios";
 import { ReactComponent as NoHayNegocio } from "./../img/no-hay-negocios.svg";
 import { Contenedor } from "./../elementos/ElementosFormulario";
 const Home = () => {
@@ -67,20 +68,20 @@ const Home = () => {
     return (
       <>
         <ContenedorBtns>
-          <Btn type="button" onClick={() => nextPage()}>
+          <Btn type="button" morado onClick={() => nextPage()}>
             Siguiente
           </Btn>
-          <Btn type="button" Rojo onClick={() => backPage()}>
+          <Btn type="button" onClick={() => backPage()}>
             Atrás
           </Btn>
           pagina:{page}
         </ContenedorBtns>
         <ListaComerciantes personajes={data} />
+        <Servicios/>
+        <Footer />
       </>
     );
   }
-
-  return <p> No hay personajes</p>;
 };
 
 const Loader = styled.div`
@@ -152,8 +153,8 @@ const ContenedorBtns = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000;
-  color: #fff;
+  background-color: transparent;
+  color: black;
 `;
 
 const Btn = styled.button`
@@ -167,7 +168,7 @@ const Btn = styled.button`
   text-align: center;
   cursor: pointer;
   border-radius: 3px;
-  background-color: ${(props) => (props.Rojo ? "red" : "blue")};
+  background-color: ${(props) => (props.morado ? "#560bad" : "#101010")};
   color: #fff;
   border-radius: 0.5rem;
 `;

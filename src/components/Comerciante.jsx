@@ -1,27 +1,26 @@
 import styled from "styled-components";
 const Comerciante = ({ personaje }) => {
   return (
-    <Card>
-      <div>
-        <img src={personaje.image} alt={personaje.name} />
-      </div>
-
-      <div>
-        <h3>{personaje.name}</h3>
-        <p>gender:{personaje.gender}</p>
-        <p>{personaje.origin.name}</p>
-        <p>{personaje.species}</p>
-        {personaje.status === "Alive" ? (
-          <p style={{ color: "green" }}>{personaje.status}</p>
-        ) : personaje.status === "Dead" ? (
-          <p style={{ color: "red" }}>{personaje.status}</p>
-        ) : (
-          personaje.status === "unknown" && (
-            <p style={{ color: "#A9A9A9" }}>{personaje.status}</p>
-          )
-        )}
-      </div>
-    </Card>
+    <>
+      <Card>
+        <div>
+          <img src={personaje.image} alt="" />
+          <h3>{personaje.name}</h3>
+          <p>gender:{personaje.gender}</p>
+          <p>{personaje.origin.name}</p>
+          <p>{personaje.species}</p>
+          {personaje.status === "Alive" ? (
+            <p style={{ color: "green" }}>{personaje.status}</p>
+          ) : personaje.status === "Dead" ? (
+            <p style={{ color: "red" }}>{personaje.status}</p>
+          ) : (
+            personaje.status === "unknown" && (
+              <p style={{ color: "#0e0d0d" }}>{personaje.status}</p>
+            )
+          )}
+        </div>
+      </Card>
+    </>
   );
 };
 
@@ -29,6 +28,10 @@ const Card = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
+
+  & :nth-child(1) {
+    color: black;
+  }
 
   & > div > img {
     cursor: pointer;
