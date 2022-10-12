@@ -9,7 +9,7 @@ import { ReactComponent as NoHayNegocio } from "./../img/no-hay-negocios.svg";
 import { Contenedor } from "./../elementos/ElementosFormulario";
 const Home = () => {
   const [cargando, setCargando] = useState(true);
-  const [negocios, setNegocios] = useObtenerNegocios();
+  const [negocios] = useObtenerNegocios();
 
   // API RICK AND MORTY , Probando estilos de posibles tarjetas
   const [page, setPage] = useState(1);

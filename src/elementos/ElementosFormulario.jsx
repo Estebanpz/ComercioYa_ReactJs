@@ -4,7 +4,7 @@ const Contenedor = styled.div`
   width: 100%;
   height: ${props => props.full ? '100%' : '100vh'};
   display: grid;
-  background-color:${props => props.formulario ? '#E5E5E5': '#000000'};
+  background-color:#FCFCFC;
   padding: 1rem;
   justify-content: center;
   align-items: center;
@@ -39,7 +39,7 @@ const ContenedorInputs = styled.div`
   align-items: center;
   background-color: none;
    &>label{
-    color: ${props => props.blanco && '#FFFF'};
+    color: ${props => props.blanco && '#1E0065'};
    }
 `;
 const Input = styled.input`
@@ -55,7 +55,7 @@ const Input = styled.input`
   font-weight: bold;
   font-size: 1.2rem;
   border-radius: 0.1rem;
-  color: #fca311;
+  color: #1E0065;
   margin: 1rem;
   padding: 0.4rem;
   &::placeholder {
@@ -64,7 +64,7 @@ const Input = styled.input`
 
   &:hover {
     transition: all ease-in-out 0.5s;
-    border-bottom: 2px solid #fba410;
+    border-bottom: 2px solid #101010;
   }
 
   &:-webkit-autofill,
@@ -94,7 +94,7 @@ const Btn = styled.button`
   text-align: center;
   cursor: pointer;
   border-radius: 3px;
-  background-color: #fca311;
+  background-color: #4361EE;
   color: #fff;
   border-radius: 0.5rem;
   font-size:1rem;

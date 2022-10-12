@@ -11,7 +11,7 @@ import swal from "sweetalert";
 import { BsPlusLg } from "react-icons/bs";
 const CrearCuenta = () => {
   //Llamando a la funcion que valida el formulario
-  const { error, validacion, valido } = useFormValidacion();
+  const { error, setError } = useFormValidacion();
   //Manejando errores de Registro de Usuario
   const [errorRegistro, setErrorRegistro] = useState("");
   //Definiendo el estado de los inputs
@@ -22,29 +22,89 @@ const CrearCuenta = () => {
     contrasena: "",
     contrasena2: "",
   });
-
+  const [valido, setValido] = useState(false);
   const handleChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
 
-    if(validacion(e, name, value)){
-      setDatos({
-        ...datos,
-        [name]: value,
-      });
-    }else{
-      swal({
-        title:"error",
-        text: error?.name,
-        icon:"error",
-      });
-    }
-
+    setDatos({
+      ...datos,
+      [name]: value,
+    });
   }; //Fin del handleChange
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    console.log(valido);
+    const regex = /^[a-zA-Z\\áéíóúÁÉÍÓÚñÑ\s]*$/;
+    const regexCorreo =
+      /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+    const regexContrasena = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d0-9]{8,}$/
+    if (!regex.test(datos.nombre) || datos.nombre.length === 0) {
+      setError({
+        ...error,
+        nombre: "Digite su nombre sin números o caracteres especiales.",
+      });
+      setValido(false);
+      return;
+    }
+
+    if (!regex.test(datos.apellido) || datos.apellido.length === 0) {
+      setError({
+        ...error,
+        apellido: "Digite su apellido sin números o caracteres especiales",
+      });
+      setValido(false);
+      return;
+    }
+
+    if (!regexCorreo.test(datos.correo) || datos.correo.length === 0) {
+      setError({
+        ...error,
+        correo: "Digite un correo válido.",
+      });
+      setValido(false);
+      return;
+    }
+
+    if (datos.contrasena !== null && datos.contrasena2 !== null) {
+      if (datos.contrasena === datos.contrasena2) {
+        if (!regexContrasena.test(datos.contrasena)) {
+          setError({
+            ...error,
+            contrasena:
+              "La Contraseña debe ser mínimo de 8 Caracteres. 1 Mayuscula y 1 Número.",
+          });
+          setValido(false);
+        } else {
+          setValido(true);
+        }
+      } else {
+        setError({
+          ...error,
+          contrasena2: "Las contraseñas deben coincidir.",
+        });
+        setValido(false);
+      }
+    } else {
+      setValido(false);
+      setError({
+        ...error,
+        contrasena: "No puede quedar la contraseña vacia.",
+      });
+    }
+
+    setValido(
+      regex.test(
+        datos.nombre &&
+          regex.test(datos.apellido) &&
+          regexContrasena.test(datos.contrasena) &&
+          regexCorreo.test(datos.correo)
+      )
+    );
+        
     if (valido) {
+      setError({})
       try {
         await RegistrarUsuario(
           datos.correo,
@@ -91,80 +151,105 @@ const CrearCuenta = () => {
 
   //Renderizado del componente
   return (
-    <Contenedor>
-      <ContenedorSvg>
-        <IconoRegistro />
-      </ContenedorSvg>
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-6 col-md-6 col-xl-6 col-lg-6">
+            <ContenedorSvg>
+              <IconoRegistro />
+            </ContenedorSvg>
+            <div className="text-center p-2">
+              <h2>
+                Comercio Ya te ayuda a que más personas logren visualizarte y
+                llegues más lejos.
+              </h2>
+            </div>
+          </div>
+          <div className="col-sm-6 col-md-6 col-xl-6 col-lg-6 mt-5">
+            <div className="card" style={{ backgroundColor: "#4895EF", borderRadius:'1rem' }}>
+              <div className="card-body">
+                <form onSubmit={(e) => onSubmit(e)}>
+                  {error && error.nombre && <Error>{error.nombre}</Error>}
+                  {errorRegistro && <Error>{errorRegistro}</Error>}
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      name="nombre"
+                      placeholder="Nombres completos"
+                      value={datos.nombre}
+                      autoFocus
+                      className="form-control text-center"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </div>
 
-      <ContenedorFormulario>
-        <form onSubmit={(e) => onSubmit(e)}>
-          {error && error.nombre && <Error>{error.nombre}</Error>}
-          <ContenedorInputs>
-            <Input
-              type="text"
-              name="nombre"
-              placeholder="NOMBRE"
-              value={datos.nombre}
-              autoFocus
-              onChange={(e) => handleChange(e)}
-            />
-          </ContenedorInputs>
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      name="apellido"
+                      placeholder="Apellidos completos"
+                      value={datos.apellido}
+                      className="form-control text-center"
+                      onChange={(e) => handleChange(e)}
+                    />
+                    {error && error.apellido && <Error>{error.apellido}</Error>}
+                  </div>
+                  <div className="form-group">
+                    <input
+                      type="email"
+                      name="correo"
+                      placeholder="Correo@ejemplo.com"
+                      value={datos.correo}
+                      className="form-control text-center"
+                      onChange={(e) => handleChange(e)}
+                    />
+                    {error && error.correo && <Error>{error.correo}</Error>}
+                  </div>
 
-          <ContenedorInputs>
-            <Input
-              type="text"
-              name="apellido"
-              placeholder="APELLIDO"
-              value={datos.apellido}
-              onChange={(e) => handleChange(e)}
-            />
-            {error && error.apellido && <Error>{error.apellido}</Error>}
-          </ContenedorInputs>
-          <ContenedorInputs>
-            <Input
-              type="email"
-              name="correo"
-              placeholder="CORREO@CORREO.COM"
-              value={datos.correo}
-              onChange={(e) => handleChange(e)}
-            />
-            {error && error.correo && <Error>{error.correo}</Error>}
-          </ContenedorInputs>
-
-          <ContenedorInputs className="form-group">
-            <Input
-              type="password"
-              name="contrasena"
-              placeholder="CONTRASEÑA"
-              id="contrasena"
-              autoComplete="true"
-              value={datos.contrasena}
-              onChange={(e) => handleChange(e)}
-            />
-          </ContenedorInputs>
-          {error && error.contrasena && <Error>{error.contrasena}</Error>}
-          <ContenedorInputs className="form-group">
-            <Input
-              type="password"
-              name="contrasena2"
-              placeholder="CONFIRMAR CONTRASEÑA"
-              autoComplete="true"
-              value={datos.contrasena2}
-              onChange={(e) => handleChange(e)}
-            />
-          </ContenedorInputs>
-          {error && error.contrasena2 && <Error>{error.contrasena2}</Error>}
-          <ContenedorBtns>
-            <Btn>
-              <span>
-                <BsPlusLg className="mx-1" fontSize="1.5rem" />
-              </span>
-              Crear Cuenta
-            </Btn>
-          </ContenedorBtns>
-        </form>
-      </ContenedorFormulario>
-    </Contenedor>
+                  <div className="form-group">
+                    <input
+                      type="password"
+                      name="contrasena"
+                      placeholder="Contraseña"
+                      id="contrasena"
+                      autoComplete="true"
+                      className="form-control text-center"
+                      value={datos.contrasena}
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </div>
+                  {error && error.contrasena && (
+                    <Error>{error.contrasena}</Error>
+                  )}
+                  <div className="form-group">
+                    <input
+                      type="password"
+                      name="contrasena2"
+                      placeholder="Confirmar Contraseña"
+                      autoComplete="true"
+                      className="form-control text-center"
+                      value={datos.contrasena2}
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </div>
+                  {error && error.contrasena2 && (
+                    <Error>{error.contrasena2}</Error>
+                  )}
+                  <ContenedorBtns>
+                    <Btn>
+                      <span>
+                        <BsPlusLg className="mx-1" fontSize="1.5rem" />
+                      </span>
+                      Crear Cuenta
+                    </Btn>
+                  </ContenedorBtns>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -172,7 +257,7 @@ const Contenedor = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
-  background-color: #000000;
+  background-color: #fcfcfc;
   padding: 1rem;
   justify-content: center;
   align-items: center;
@@ -211,7 +296,7 @@ const Input = styled.input`
   font-weight: bold;
   font-size: 1.2rem;
   border-radius: 0.1rem;
-  color: #fca311;
+  color: #1e0065;
   margin: 1rem;
   padding: 0.4rem;
   &::placeholder {
@@ -220,7 +305,7 @@ const Input = styled.input`
 
   &:hover {
     transition: all ease-in-out 0.5s;
-    border-bottom: 2px solid #fba410;
+    border-bottom: 2px solid #101010;
   }
 
   &:-webkit-autofill,
@@ -241,7 +326,7 @@ const ContenedorBtns = styled.div`
 
 const Btn = styled.button`
   width: auto;
-  height: 3rem;
+  height: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -250,9 +335,20 @@ const Btn = styled.button`
   text-align: center;
   cursor: pointer;
   border-radius: 3px;
-  background-color: #fca311;
-  color: #fff;
+  background-color: #fcfcfc;
+  color: #101010;
   border-radius: 0.5rem;
+
+  &:hover {
+    transition: all ease-in-out 0.4s;
+    background-color: #101010;
+    color: #fcfcfc;
+  }
+
+  & > span > svg {
+    width: 1rem;
+    height: auto;
+  }
 `;
 
 const ContenedorSvg = styled.div`
@@ -264,7 +360,7 @@ const ContenedorSvg = styled.div`
   justify-content: center;
 
   & > svg {
-    width: 40%;
+    width: 60%;
     height: auto;
     padding: 0;
     margin: 0;
@@ -279,7 +375,7 @@ const Titulo = styled.div`
 `;
 
 const Error = styled.p`
-  color: #ccc;
+  color: #101010;
   font-size: 1.2rem;
   margin-top: 0.5rem;
 `;

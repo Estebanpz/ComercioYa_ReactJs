@@ -4,7 +4,7 @@ const useFormValidacion = () => {
     const [valido, setValido] = useState(false);
 
     const validacion = (e, name, value) => {
-        const regex = /^([a-zA-Z]+)(\s[a-zA-Z]+)*$/;
+        const regex = /^([a-zA-Z]+)([a-zA-Z]+)*$/;
         switch (name) {
             case 'nombre':
                 if (!regex.test(value)) {

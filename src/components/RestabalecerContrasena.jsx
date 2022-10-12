@@ -55,7 +55,7 @@ const RestablecerContrasena = () => {
   return (
     <Contenedor>
       <strong>
-        <h1 style={{ color: "whitesmoke" }}>Restablecer Contraseña</h1>
+        <h1 style={{ color: "#560BAD" }}>Restablecer Contraseña</h1>
       </strong>
       <ContenedorSvg>
         <Password />

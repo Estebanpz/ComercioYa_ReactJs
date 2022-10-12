@@ -8,6 +8,7 @@ import IniciarSesion from "../Firebase/IniciarSesion";
 import swal from "sweetalert";
 //Importando iconos
 import { BsArrowClockwise, BsBoxArrowInRight } from "react-icons/bs";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import styled from "styled-components";
 const InicioSesion = () => {
   const { user } = useAuth();
@@ -16,7 +17,7 @@ const InicioSesion = () => {
     email: "",
     password: "",
   });
-
+  const [ver, setVer] = useState(false);
   useEffect(() => {
     if (user) {
       navigate("/");
@@ -71,52 +72,107 @@ const InicioSesion = () => {
       );
     }
   };
+
+  const handleToogle = () => {
+    let inputPassword = document.getElementById("password");
+    if (inputPassword.type === "password") {
+      inputPassword.type = "text";
+      setVer(true);
+    } else {
+      inputPassword.type = "password";
+      setVer(false);
+    }
+  };
   return (
-    <Contenedor>
-      <ContenedorSvg>
-        <IconoLogin />
-      </ContenedorSvg>
-      <ContenedorFormulario>
-        <form onSubmit={onSubmit}>
-          <ContenedorInputs>
-            <Input
-              type="email"
-              name="email"
-              placeholder="CORREO@CORREO.COM"
-              value={datos.email}
-              autoFocus
-              onChange={(e) => handleChange(e)}
-              id="email"
-            />
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-6 col-md-6 col-xl-6 col-lg-6 mt-5">
+            <ContenedorSvg>
+              <IconoLogin />
+            </ContenedorSvg>
+            <div className="text-center p-2 m-2">
+              <h2>
+                Comercio Ya te ayuda a que más personas logren visualizarte y
+                llegues más lejos.
+              </h2>
+            </div>
+          </div>
 
-            <Input
-              type="password"
-              name="password"
-              placeholder="CONTRASEÑA"
-              value={datos.password}
-              onChange={(e) => handleChange(e)}
-              autoComplete="true"
-              id="password"
-            />
-          </ContenedorInputs>
+          <div className="col sm-6 col-md-6 col-xl-6 col-lg-6 mt-5">
+            <div
+              className="card"
+              style={{ backgroundColor: "#4895EF", borderRadius: "1rem" }}
+            >
+              <div className="card-body">
+                <form onSubmit={onSubmit}>
+                  <div className="form-group">
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Correo electronico"
+                      value={datos.email}
+                      autoFocus
+                      className="form-control text-center"
+                      onChange={(e) => handleChange(e)}
+                      id="email"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Contraseña"
+                      value={datos.password}
+                      onChange={(e) => handleChange(e)}
+                      autoComplete="true"
+                      className="form-control text-center"
+                      id="password"
+                    />
+                    <div className="d-inline-block">
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleToogle()}
+                      >
+                        {ver ? (
+                          <FaEye
+                            style={{ color: "#560BAD", fontSize: "1.4rem" }}
+                          />
+                        ) : (
+                          <FaEyeSlash
+                            style={{ color: "#560BAD", fontSize: "1.4rem" }}
+                          />
+                        )}
+                      </span>
+                    </div>
+                  </div>
 
-          <ContenedorBtns>
-            <Btn>
-              <span>
-                <BsBoxArrowInRight fontSize="1.5rem" />
-              </span>
-              Iniciar Sesión
-            </Btn>
-          </ContenedorBtns>
-          <NavLink to="/restablecer-contrasena" style={{ color: "#fff" }}>
-            <span>
-              <BsArrowClockwise fontSize="1.5rem" />
-            </span>
-            Restablecer Contraseña
-          </NavLink>
-        </form>
-      </ContenedorFormulario>
-    </Contenedor>
+                  <ContenedorBtns>
+                    <Btn>
+                      <span>
+                        <BsBoxArrowInRight className="mx-1" />
+                      </span>
+                      Iniciar Sesión
+                    </Btn>
+                  </ContenedorBtns>
+                  <div className="text-center">
+                    <NavLink
+                      to="/restablecer-contrasena"
+                      style={{ color: "#FCFCFC" }}
+                    >
+                      <span>
+                        <BsArrowClockwise fontSize="1.5rem" />
+                      </span>
+                      Restablecer Contraseña
+                    </NavLink>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -124,7 +180,7 @@ const Contenedor = styled.div`
   width: 100%;
   height: 100vh;
   display: grid;
-  background-color: #000000;
+  background-color: #fcfcfc;
   padding: 1rem;
   justify-content: center;
   align-items: center;
@@ -163,7 +219,7 @@ const Input = styled.input`
   font-weight: bold;
   font-size: 1.2rem;
   border-radius: 0.1rem;
-  color: #fca311;
+  color: #1e0065;
   margin: 1rem;
   padding: 0.4rem;
   &::placeholder {
@@ -172,7 +228,7 @@ const Input = styled.input`
 
   &:hover {
     transition: all ease-in-out 0.5s;
-    border-bottom: 2px solid #fba410;
+    border-bottom: 2px solid #101010;
   }
 
   &:-webkit-autofill,
@@ -194,7 +250,7 @@ const ContenedorSvg = styled.div`
   justify-content: center;
   align-items: center;
   & > svg {
-    width: 40%;
+    width: 60%;
     height: auto;
     padding: 0;
     margin: 0;
@@ -210,7 +266,7 @@ const ContenedorBtns = styled.div`
 
 const Btn = styled.button`
   width: auto;
-  height: 3rem;
+  height: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -219,9 +275,21 @@ const Btn = styled.button`
   text-align: center;
   cursor: pointer;
   border-radius: 3px;
-  background-color: #fca311;
-  color: #fff;
+  background-color: #fcfcfc;
+  color: #101010;
   border-radius: 0.5rem;
+
+  &:hover {
+    transition: all ease-in-out 0.4s;
+    background-color: #101010;
+    color: #fcfcfc;
+  }
+
+  & > span > svg {
+    width: 1.4rem;
+    height: auto;
+    margin: 1rem 0;
+  }
 `;
 
 const Titulo = styled.div`
